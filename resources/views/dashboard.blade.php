@@ -468,22 +468,18 @@
     const sectionStatistics = document.getElementById("sectionStatistics");
     const sectionArticles = document.getElementById("sectionArticles");
 
-    // Transactions data array
     let transactions = [];
 
-    // Elements for report
     const transactionForm = document.getElementById("transactionForm");
     const transactionsTableBody = document.getElementById("transactionsTableBody");
     const totalIncomeEl = document.getElementById("totalIncome");
     const totalExpenseEl = document.getElementById("totalExpense");
     const balanceEl = document.getElementById("balance");
 
-    // Elements for dashboard
     const dashboardIncomeEl = document.getElementById("dashboardIncome");
     const dashboardOutcomeEl = document.getElementById("dashboardOutcome");
     const dashboardTransactionList = document.getElementById("dashboardTransactionList");
 
-    // Elements for statistics
     const statIncome = document.getElementById("statIncome");
     const statExpense = document.getElementById("statExpense");
     const statBalance = document.getElementById("statBalance");
