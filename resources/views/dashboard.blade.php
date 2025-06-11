@@ -219,7 +219,7 @@
                         legend: {
                             position: 'top',
                             labels: {
-                                color: themeColors.text.primary,
+                                color: themeColors[getCurrentTheme()].text.primary,
                                 usePointStyle: true,
                                 padding: 20
                             }
@@ -227,10 +227,10 @@
                         tooltip: {
                             mode: 'index',
                             intersect: false,
-                            backgroundColor: themeColors.tooltip.background,
-                            titleColor: themeColors.tooltip.title,
-                            bodyColor: themeColors.tooltip.body,
-                            borderColor: themeColors.tooltip.border,
+                            backgroundColor: themeColors[getCurrentTheme()].tooltip.background,
+                            titleColor: themeColors[getCurrentTheme()].tooltip.text,
+                            bodyColor: themeColors[getCurrentTheme()].tooltip.text,
+                            borderColor: themeColors[getCurrentTheme()].tooltip.border,
                             borderWidth: 1,
                             padding: 12,
                             callbacks: {
@@ -255,22 +255,22 @@
                     scales: {
                         x: {
                             grid: {
-                                color: themeColors.grid,
+                                color: themeColors[getCurrentTheme()].grid.primary,
                                 drawBorder: false
                             },
                             ticks: {
-                                color: themeColors.text.secondary,
+                                color: themeColors[getCurrentTheme()].text.secondary,
                                 maxRotation: 45,
                                 minRotation: 45
                             }
                         },
                         y: {
                             grid: {
-                                color: themeColors.grid,
+                                color: themeColors[getCurrentTheme()].grid.primary,
                                 drawBorder: false
                             },
                             ticks: {
-                                color: themeColors.text.secondary,
+                                color: themeColors[getCurrentTheme()].text.secondary,
                                 callback: function(value) {
                                     return new Intl.NumberFormat('id-ID', {
                                         style: 'currency',
@@ -305,14 +305,14 @@
                     datasets: [{
                         data: {!! json_encode(array_values($categoryDistribution)) !!},
                         backgroundColor: [
-                            themeColors.chart.category1,
-                            themeColors.chart.category2,
-                            themeColors.chart.category3,
-                            themeColors.chart.category4,
-                            themeColors.chart.category5
+                            themeColors[getCurrentTheme()].chart.accent[0],
+                            themeColors[getCurrentTheme()].chart.accent[1],
+                            themeColors[getCurrentTheme()].chart.accent[2],
+                            themeColors[getCurrentTheme()].chart.accent[3],
+                            themeColors[getCurrentTheme()].chart.accent[4]
                         ],
                         borderWidth: 2,
-                        borderColor: themeColors.background.primary
+                        borderColor: themeColors[getCurrentTheme()].background.primary
                     }]
                 },
                 options: {
@@ -322,7 +322,7 @@
                         legend: {
                             position: 'right',
                             labels: {
-                                color: themeColors.text.primary,
+                                color: themeColors[getCurrentTheme()].text.primary,
                                 usePointStyle: true,
                                 padding: 20,
                                 font: {
@@ -331,10 +331,10 @@
                             }
                         },
                         tooltip: {
-                            backgroundColor: themeColors.tooltip.background,
-                            titleColor: themeColors.tooltip.title,
-                            bodyColor: themeColors.tooltip.body,
-                            borderColor: themeColors.tooltip.border,
+                            backgroundColor: themeColors[getCurrentTheme()].tooltip.background,
+                            titleColor: themeColors[getCurrentTheme()].tooltip.text,
+                            bodyColor: themeColors[getCurrentTheme()].tooltip.text,
+                            borderColor: themeColors[getCurrentTheme()].tooltip.border,
                             borderWidth: 1,
                             padding: 12,
                             callbacks: {

@@ -30,7 +30,13 @@ const themeColors = {
             income: ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
             expense: ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'],
             neutral: ['#6B7280', '#9CA3AF', '#D1D5DB', '#E5E7EB', '#F3F4F6'],
-            accent: ['#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE', '#DBEAFE']
+            accent: ['#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE', '#DBEAFE'],
+            category1: '#059669',  // Green
+            category2: '#3B82F6',  // Blue
+            category3: '#F59E0B',  // Amber
+            category4: '#8B5CF6',  // Purple
+            category5: '#EC4899',  // Pink
+            category6: '#10B981'   // Emerald
         },
         tooltip: {
             background: '#FFFFFF',
@@ -73,7 +79,13 @@ const themeColors = {
             income: ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
             expense: ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'],
             neutral: ['#9CA3AF', '#6B7280', '#4B5563', '#374151', '#1F2937'],
-            accent: ['#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF']
+            accent: ['#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF'],
+            category1: '#10B981',  // Emerald
+            category2: '#60A5FA',  // Blue
+            category3: '#FBBF24',  // Amber
+            category4: '#A78BFA',  // Purple
+            category5: '#F472B6',  // Pink
+            category6: '#34D399'   // Green
         },
         tooltip: {
             background: '#1F2937',
@@ -93,98 +105,17 @@ function getCurrentTheme() {
     return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-// Function to apply theme to elements
-function applyThemeToElements() {
-    const theme = getCurrentTheme();
-    const colors = themeColors[theme];
+// Function to toggle theme
+function toggleTheme() {
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+    updateChartColors();
+}
 
-    // Update card styles
-    document.querySelectorAll('.card').forEach(card => {
-        if (!card.classList.contains('bg-gradient-to-br')) {
-            card.style.backgroundColor = colors.background.card;
-            card.style.boxShadow = colors.shadow.md;
-            card.style.borderColor = colors.border.light;
-        }
-    });
-
-    // Update text colors
-    document.querySelectorAll('[class*="text-gray-"]').forEach(element => {
-        const classes = element.className.split(' ');
-        classes.forEach(cls => {
-            if (cls.startsWith('text-gray-')) {
-                element.classList.remove(cls);
-            }
-        });
-        if (element.classList.contains('font-bold')) {
-            element.style.color = colors.text.primary;
-        } else if (element.classList.contains('text-sm')) {
-            element.style.color = colors.text.secondary;
-        } else {
-            element.style.color = colors.text.muted;
-        }
-    });
-
-    // Update icons
-    document.querySelectorAll('.fas, .far, .fab').forEach(icon => {
-        const parentCard = icon.closest('.card');
-        if (parentCard) {
-            if (parentCard.classList.contains('bg-gradient-to-br')) {
-                // Keep gradient card icons as is
-                return;
-            }
-            if (icon.classList.contains('text-red-')) {
-                icon.style.color = colors.chart.expense[0];
-            } else if (icon.classList.contains('text-green-')) {
-                icon.style.color = colors.chart.income[0];
-            } else if (icon.classList.contains('text-blue-')) {
-                icon.style.color = colors.chart.accent[0];
-            } else {
-                icon.style.color = colors.text.secondary;
-            }
-        }
-    });
-
-    // Update buttons
-    document.querySelectorAll('button').forEach(button => {
-        if (!button.classList.contains('bg-indigo-')) {
-            button.style.borderColor = colors.border.medium;
-            button.style.color = colors.text.primary;
-            button.style.backgroundColor = colors.background.secondary;
-        }
-    });
-
-    // Update select elements
-    document.querySelectorAll('select').forEach(select => {
-        select.style.backgroundColor = colors.background.secondary;
-        select.style.borderColor = colors.border.medium;
-        select.style.color = colors.text.primary;
-    });
-
-    // Update article cards
-    document.querySelectorAll('article').forEach(article => {
-        if (!article.classList.contains('bg-gradient-to-br')) {
-            article.style.backgroundColor = colors.background.card;
-            article.style.boxShadow = colors.shadow.md;
-            article.style.borderColor = colors.border.light;
-        }
-    });
-
-    // Update navigation
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.style.color = colors.text.primary;
-        if (link.classList.contains('active')) {
-            link.style.backgroundColor = theme === 'dark' 
-                ? 'rgba(255, 255, 255, 0.05)'
-                : 'rgba(0, 0, 0, 0.05)';
-        }
-    });
-
-    // Update sidebar
-    const sidebar = document.querySelector('aside');
-    if (sidebar) {
-        sidebar.style.backgroundColor = colors.background.secondary;
-        sidebar.style.borderColor = colors.border.light;
-    }
+// Function to apply theme-dependent styles
+function applyThemeDependentStyles() {
+    updateChartColors();
 }
 
 // Function to update chart colors
@@ -292,9 +223,6 @@ function updateChartColors() {
             chart.update('none'); // Update without animation for theme changes
         });
     }
-
-    // Apply theme to other elements
-    applyThemeToElements();
 }
 
 // Initialize theme system

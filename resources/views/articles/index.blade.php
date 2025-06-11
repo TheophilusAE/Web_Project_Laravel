@@ -32,8 +32,12 @@
 
     <!-- Visualization: Articles per Category -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"><i class="fas fa-chart-bar mr-2"></i>Articles per Category</h2>
-        <canvas id="articlesCategoryChart" class="w-full h-64"></canvas>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <i class="fas fa-chart-bar mr-2"></i>Articles per Category
+        </h2>
+        <div class="relative" style="height: 300px;">
+            <canvas id="articlesCategoryChart"></canvas>
+        </div>
     </div>
 
     <!-- Articles Grid -->
@@ -94,8 +98,86 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize any article-specific JavaScript here
+// Store chart instance globally to prevent multiple instances
+let articlesCategoryChart = null;
+
+// Function to initialize the chart
+function initializeArticlesChart() {
+    const chartCanvas = document.getElementById('articlesCategoryChart');
+    if (!chartCanvas) return;
+
+    // If chart already exists, destroy it
+    if (articlesCategoryChart) {
+        articlesCategoryChart.destroy();
+        articlesCategoryChart = null;
+    }
+
+    const ctx = chartCanvas.getContext('2d');
+    const currentTheme = getCurrentTheme();
+    const theme = themeColors[currentTheme];
+
+    // Create new chart instance
+    articlesCategoryChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($categories->pluck('name')) !!},
+            datasets: [{
+                label: 'Articles',
+                data: {!! json_encode($categories->pluck('articles_count')) !!},
+                backgroundColor: theme.chart.category1,
+                borderColor: theme.chart.category1,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 0 // Disable animations to prevent container issues
+            },
+            plugins: {
+                legend: { 
+                    display: false 
+                },
+                tooltip: {
+                    backgroundColor: theme.tooltip.background,
+                    titleColor: theme.tooltip.text,
+                    bodyColor: theme.tooltip.text,
+                    borderColor: theme.tooltip.border,
+                    borderWidth: 1,
+                    padding: 12
+                }
+            },
+            scales: {
+                x: {
+                    grid: { 
+                        display: false // Hide x-axis grid lines
+                    },
+                    ticks: { 
+                        color: theme.text.secondary,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    grid: { 
+                        color: theme.grid.primary,
+                        drawBorder: false
+                    },
+                    ticks: { 
+                        color: theme.text.secondary,
+                        beginAtZero: true,
+                        precision: 0 // Only show whole numbers
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Wait for both DOM and window load to ensure all resources are available
+window.addEventListener('load', function() {
+    // Initialize search and category filter
     const searchInput = document.querySelector('input[type="text"]');
     const categorySelect = document.querySelector('select');
 
@@ -126,45 +208,51 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "{{ route('articles.index') }}?category=" + encodeURIComponent(e.target.value);
     });
 
-    const ctx = document.getElementById('articlesCategoryChart').getContext('2d');
-    const articlesCategoryChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($categories->pluck('name')) !!},
-            datasets: [{
-                label: 'Articles',
-                data: {!! json_encode($categories->pluck('articles_count')) !!},
-                backgroundColor: themeColors.chart.category1,
-                borderColor: themeColors.chart.category1,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: themeColors.tooltip.background,
-                    titleColor: themeColors.tooltip.title,
-                    bodyColor: themeColors.tooltip.body,
-                    borderColor: themeColors.tooltip.border,
-                    borderWidth: 1,
-                    padding: 12
-                }
-            },
-            scales: {
-                x: {
-                    grid: { color: themeColors.grid },
-                    ticks: { color: themeColors.text.secondary }
-                },
-                y: {
-                    grid: { color: themeColors.grid },
-                    ticks: { color: themeColors.text.secondary }
-                }
-            }
+    // Initialize chart after a small delay to ensure DOM is ready
+    setTimeout(initializeArticlesChart, 100);
+
+    // Theme change handler
+    document.addEventListener('themeChanged', function() {
+        if (!articlesCategoryChart) return;
+        
+        const newTheme = getCurrentTheme();
+        const newThemeColors = themeColors[newTheme];
+        
+        // Update chart colors
+        articlesCategoryChart.data.datasets[0].backgroundColor = newThemeColors.chart.category1;
+        articlesCategoryChart.data.datasets[0].borderColor = newThemeColors.chart.category1;
+        
+        // Update tooltip colors
+        articlesCategoryChart.options.plugins.tooltip.backgroundColor = newThemeColors.tooltip.background;
+        articlesCategoryChart.options.plugins.tooltip.titleColor = newThemeColors.tooltip.text;
+        articlesCategoryChart.options.plugins.tooltip.bodyColor = newThemeColors.tooltip.text;
+        articlesCategoryChart.options.plugins.tooltip.borderColor = newThemeColors.tooltip.border;
+        
+        // Update axis colors
+        articlesCategoryChart.options.scales.x.ticks.color = newThemeColors.text.secondary;
+        articlesCategoryChart.options.scales.y.grid.color = newThemeColors.grid.primary;
+        articlesCategoryChart.options.scales.y.ticks.color = newThemeColors.text.secondary;
+        
+        articlesCategoryChart.update('none'); // Update without animation
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        if (articlesCategoryChart) {
+            articlesCategoryChart.destroy();
+            articlesCategoryChart = null;
         }
     });
+});
+
+// Cleanup on page hide
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && articlesCategoryChart) {
+        articlesCategoryChart.destroy();
+        articlesCategoryChart = null;
+    } else if (!document.hidden && !articlesCategoryChart) {
+        setTimeout(initializeArticlesChart, 100);
+    }
 });
 </script>
 @endpush

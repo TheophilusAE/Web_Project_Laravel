@@ -12,7 +12,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -20,65 +19,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/theme.js') }}"></script>
     @stack('scripts')
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'gradient-x': 'gradient-x 15s ease infinite',
-                        'gradient-y': 'gradient-y 15s ease infinite',
-                        'gradient-xy': 'gradient-xy 15s ease infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        'gradient-x': {
-                            '0%, 100%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            }
-                        },
-                        'gradient-y': {
-                            '0%, 100%': {
-                                'background-size': '400% 400%',
-                                'background-position': 'center top'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'center bottom'
-                            }
-                        },
-                        'gradient-xy': {
-                            '0%, 100%': {
-                                'background-size': '400% 400%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            }
-                        },
-                        'float': {
-                            '0%, 100%': {
-                                transform: 'translateY(0)'
-                            },
-                            '50%': {
-                                transform: 'translateY(-10px)'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         html, body {
             height: 100%;
@@ -193,7 +133,7 @@
                     </a>
                     <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
                         <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                        Analysiss
+                        Analysis
                     </a>
                     <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
                         <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
@@ -283,6 +223,19 @@
                             Articles
                         </a>
                     @endif
+                    <div class="mt-auto border-t border-indigo-600 dark:border-gray-700">
+                        <a href="{{ route('profile.edit') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
+                            <i class="fas fa-user w-5 h-5 mr-3"></i>
+                            Profile
+                        </a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="nav-link flex items-center w-full px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
+                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </nav>
             </div>
         </div>
@@ -302,7 +255,7 @@
                                 <i class="fas fa-moon text-blue-300 hidden dark:block"></i>
                             </button>
                             <div class="flex items-center space-x-4">
-                                <a href="{{ route('settings') }}" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
+                                <a href="{{ route('settings.index') }}" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
                                     <i class="fas fa-cog mr-2"></i> Settings
                                 </a>
                             </div>
@@ -344,10 +297,17 @@
         } else {
             html.classList.remove('dark');
         }
+        applyThemeDependentStyles(); // Call after initial theme set
 
         // Toggle theme
-        themeToggle.addEventListener('click', toggleTheme);
-        themeToggleMobile.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('click', () => {
+            toggleTheme();
+            applyThemeDependentStyles(); // Call after theme toggle
+        });
+        themeToggleMobile.addEventListener('click', () => {
+            toggleTheme();
+            applyThemeDependentStyles(); // Call after theme toggle
+        });
 
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');

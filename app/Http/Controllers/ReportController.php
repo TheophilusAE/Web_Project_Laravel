@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -34,13 +35,69 @@ class ReportController extends Controller
             ->distinct()
             ->pluck('category');
 
-        // Compute category summary for the filtered transactions
-        $categorySummary = (clone $query)
-            ->select('category', 'type', \DB::raw('SUM(amount) as total'))
-            ->groupBy('category', 'type')
+        // Get expense categories with their amounts
+        $expenseCategories = Transaction::where('user_id', $user->id)
+            ->where('type', 'expense')
+            ->select('category', DB::raw('SUM(amount) as amount'))
+            ->groupBy('category')
+            ->orderBy('amount', 'desc')
             ->get();
 
-        return view('reports.index', compact('transactions', 'categories', 'categorySummary'));
+        // Get income categories with their amounts
+        $incomeCategories = Transaction::where('user_id', $user->id)
+            ->where('type', 'income')
+            ->select('category', DB::raw('SUM(amount) as amount'))
+            ->groupBy('category')
+            ->orderBy('amount', 'desc')
+            ->get();
+
+        // Get category comparison data
+        $categoryComparison = Transaction::where('user_id', $user->id)
+            ->select('category', 
+                    DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income'),
+                    DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense'))
+            ->groupBy('category')
+            ->orderBy('category')
+            ->get();
+
+        // Get monthly trends data
+        $monthlyTrends = Transaction::where('user_id', $user->id)
+            ->whereYear('transaction_date', Carbon::now()->year)
+            ->select(
+                DB::raw('DATE_FORMAT(transaction_date, "%M") as month'),
+                DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income'),
+                DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense'),
+                DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE -amount END) as net')
+            )
+            ->groupBy('month')
+            ->orderBy(DB::raw('MONTH(transaction_date)'))
+            ->get();
+
+        // Get savings rate trend data
+        $savingsRateTrend = Transaction::where('user_id', $user->id)
+            ->whereYear('transaction_date', Carbon::now()->year)
+            ->select(
+                DB::raw('DATE_FORMAT(transaction_date, "%M") as month'),
+                DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income'),
+                DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense')
+            )
+            ->groupBy('month')
+            ->orderBy(DB::raw('MONTH(transaction_date)'))
+            ->get()
+            ->map(function ($item) {
+                $item->rate = $item->income > 0 ? (($item->income - $item->expense) / $item->income) * 100 : 0;
+                return $item;
+            });
+
+        return view('reports.index', compact(
+            'transactions',
+            'categories',
+            'expenseCategories',
+            'incomeCategories',
+            'categoryComparison',
+            'monthlyTrends',
+            'savingsRateTrend'
+        ));
     }
 
     public function create()

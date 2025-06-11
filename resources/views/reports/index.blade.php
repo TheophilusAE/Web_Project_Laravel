@@ -112,48 +112,23 @@
     </div>
 
     <!-- Visualization: Income & Expenses by Category -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"><i class="fas fa-layer-group mr-2"></i>Income & Expenses by Category</h2>
-        <canvas id="categoryStackedChart" class="w-full h-64"></canvas>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <div class="relative" style="height: 300px;">
+            <canvas id="categoryStackedChart"></canvas>
+        </div>
     </div>
 
     <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Expense Distribution Chart -->
-        <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    <i class="fas fa-chart-pie text-red-500 mr-2"></i>
-                    Expense Distribution
-                </h3>
-                <div class="flex items-center space-x-2">
-                    <select id="expenseChartPeriod" 
-                            class="text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="month">This Month</option>
-                        <option value="year">This Year</option>
-                    </select>
-                </div>
-            </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <div class="relative" style="height: 300px;">
                 <canvas id="expenseDistributionChart"></canvas>
             </div>
         </div>
 
         <!-- Income Distribution Chart -->
-        <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    <i class="fas fa-chart-pie text-green-500 mr-2"></i>
-                    Income Distribution
-                </h3>
-                <div class="flex items-center space-x-2">
-                    <select id="incomeChartPeriod" 
-                            class="text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="month">This Month</option>
-                        <option value="year">This Year</option>
-                    </select>
-                </div>
-            </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <div class="relative" style="height: 300px;">
                 <canvas id="incomeDistributionChart"></canvas>
             </div>
@@ -184,47 +159,14 @@
     </div>
 
     <!-- Monthly Trends Chart -->
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up" data-aos-delay="400">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                <i class="fas fa-chart-line text-indigo-500 mr-2"></i>
-                Monthly Trends
-            </h3>
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Income</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Expenses</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Net</span>
-                </div>
-            </div>
-        </div>
-        <div class="relative" style="height: 400px;">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <div class="relative" style="height: 300px;">
             <canvas id="monthlyTrendsChart"></canvas>
         </div>
     </div>
 
     <!-- Savings Rate Chart -->
-    <div class="card bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" data-aos="fade-up" data-aos-delay="500">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                <i class="fas fa-chart-area text-purple-500 mr-2"></i>
-                Savings Rate Trend
-            </h3>
-            <div class="flex items-center space-x-2">
-                <select id="savingsChartPeriod" 
-                        class="text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
-                    <option value="6">Last 6 Months</option>
-                    <option value="12">Last 12 Months</option>
-                </select>
-            </div>
-        </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
         <div class="relative" style="height: 300px;">
             <canvas id="savingsRateChart"></canvas>
         </div>
@@ -287,666 +229,363 @@
     </div>
 </div>
 
+@endsection
+
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Enhanced theme color configuration
-const themeColors = {
-    light: {
-        // Base colors
-        text: {
-            primary: '#1F2937',
-            secondary: '#4B5563',
-            muted: '#6B7280',
-            inverse: '#FFFFFF'
-        },
-        background: {
-            primary: '#FFFFFF',
-            secondary: '#F9FAFB',
-            card: '#FFFFFF',
-            gradient: {
-                start: 'rgba(255, 255, 255, 0.9)',
-                end: 'rgba(255, 255, 255, 0.7)'
+    // Global variables to store chart instances
+    let categoryStackedChart = null;
+    let expenseDistributionChart = null;
+    let incomeDistributionChart = null;
+    let monthlyTrendsChart = null;
+    let savingsRateChart = null;
+    let chartsInitialized = false;
+
+    function destroyAllCharts() {
+        const charts = [
+            categoryStackedChart,
+            expenseDistributionChart,
+            incomeDistributionChart,
+            monthlyTrendsChart,
+            savingsRateChart
+        ];
+        
+        charts.forEach(chart => {
+            if (chart) {
+                chart.destroy();
             }
-        },
-        border: {
-            light: '#E5E7EB',
-            medium: '#D1D5DB',
-            dark: '#9CA3AF'
-        },
-        grid: {
-            primary: '#E5E7EB',
-            secondary: '#F3F4F6'
-        },
-        chart: {
-            income: ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
-            expense: ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'],
-            neutral: ['#6B7280', '#9CA3AF', '#D1D5DB', '#E5E7EB', '#F3F4F6'],
-            accent: ['#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE', '#DBEAFE']
-        },
-        tooltip: {
-            background: '#FFFFFF',
-            border: '#E5E7EB',
-            text: '#1F2937'
-        },
-        shadow: {
-            sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-            lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-        }
-    },
-    dark: {
-        // Base colors
-        text: {
-            primary: '#F9FAFB',
-            secondary: '#E5E7EB',
-            muted: '#9CA3AF',
-            inverse: '#1F2937'
-        },
-        background: {
-            primary: '#111827',
-            secondary: '#1F2937',
-            card: '#1F2937',
-            gradient: {
-                start: 'rgba(17, 24, 39, 0.9)',
-                end: 'rgba(17, 24, 39, 0.7)'
-            }
-        },
-        border: {
-            light: '#374151',
-            medium: '#4B5563',
-            dark: '#6B7280'
-        },
-        grid: {
-            primary: '#374151',
-            secondary: '#1F2937'
-        },
-        chart: {
-            income: ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
-            expense: ['#DC2626', '#EF4444', '#F87171', '#FCA5A5', '#FECACA'],
-            neutral: ['#9CA3AF', '#6B7280', '#4B5563', '#374151', '#1F2937'],
-            accent: ['#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF']
-        },
-        tooltip: {
-            background: '#1F2937',
-            border: '#374151',
-            text: '#F9FAFB'
-        },
-        shadow: {
-            sm: '0 1px 2px 0 rgba(0, 0, 0, 0.3)',
-            md: '0 4px 6px -1px rgba(0, 0, 0, 0.4)',
-            lg: '0 10px 15px -3px rgba(0, 0, 0, 0.4)'
-        }
+        });
+        
+        categoryStackedChart = null;
+        expenseDistributionChart = null;
+        incomeDistributionChart = null;
+        monthlyTrendsChart = null;
+        savingsRateChart = null;
+        chartsInitialized = false;
     }
-};
 
-// Chart instances storage
-let charts = {
-    expense: null,
-    income: null,
-    category: null,
-    trends: null,
-    savings: null
-};
-
-// Function to get current theme
-function getCurrentTheme() {
-    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-}
-
-// Function to apply theme to elements
-function applyThemeToElements() {
-    const theme = getCurrentTheme();
-    const colors = themeColors[theme];
-
-    // Update card styles
-    document.querySelectorAll('.card').forEach(card => {
-        if (!card.classList.contains('bg-gradient-to-br')) {
-            card.style.backgroundColor = colors.background.card;
-            card.style.boxShadow = colors.shadow.md;
-            card.style.borderColor = colors.border.light;
+    function initializeCharts() {
+        // Prevent multiple initializations
+        if (chartsInitialized) {
+            return;
         }
-    });
 
-    // Update text colors
-    document.querySelectorAll('[class*="text-gray-"]').forEach(element => {
-        const classes = element.className.split(' ');
-        classes.forEach(cls => {
-            if (cls.startsWith('text-gray-')) {
-                element.classList.remove(cls);
-            }
-        });
-        if (element.classList.contains('font-bold')) {
-            element.style.color = colors.text.primary;
-        } else if (element.classList.contains('text-sm')) {
-            element.style.color = colors.text.secondary;
-        } else {
-            element.style.color = colors.text.muted;
-        }
-    });
+        // Destroy any existing charts first
+        destroyAllCharts();
 
-    // Update icons
-    document.querySelectorAll('.fas, .far, .fab').forEach(icon => {
-        const parentCard = icon.closest('.card');
-        if (parentCard) {
-            if (parentCard.classList.contains('bg-gradient-to-br')) {
-                // Keep gradient card icons as is
-                return;
-            }
-            if (icon.classList.contains('text-red-')) {
-                icon.style.color = colors.chart.expense[0];
-            } else if (icon.classList.contains('text-green-')) {
-                icon.style.color = colors.chart.income[0];
-            } else if (icon.classList.contains('text-blue-')) {
-                icon.style.color = colors.chart.accent[0];
-            } else {
-                icon.style.color = colors.text.secondary;
-            }
-        }
-    });
+        const isDark = document.documentElement.classList.contains('dark');
+        const themeColors = {
+            background: isDark ? '#1f2937' : '#ffffff',
+            text: isDark ? '#e5e7eb' : '#374151',
+            border: isDark ? '#374151' : '#e5e7eb',
+            grid: isDark ? '#374151' : '#e5e7eb',
+            accent: isDark ? '#60a5fa' : '#3b82f6',
+            accent2: isDark ? '#34d399' : '#10b981',
+            accent3: isDark ? '#f87171' : '#ef4444',
+            accent4: isDark ? '#fbbf24' : '#f59e0b',
+            accent5: isDark ? '#a78bfa' : '#8b5cf6',
+            accent6: isDark ? '#f472b6' : '#ec4899'
+        };
 
-    // Update buttons
-    document.querySelectorAll('button').forEach(button => {
-        if (!button.classList.contains('bg-indigo-')) {
-            button.style.borderColor = colors.border.medium;
-            button.style.color = colors.text.primary;
-            button.style.backgroundColor = colors.background.secondary;
-        }
-    });
-
-    // Update select elements
-    document.querySelectorAll('select').forEach(select => {
-        select.style.backgroundColor = colors.background.secondary;
-        select.style.borderColor = colors.border.medium;
-        select.style.color = colors.text.primary;
-    });
-}
-
-// Function to update chart colors
-function updateChartColors() {
-    const theme = getCurrentTheme();
-    const colors = themeColors[theme];
-    
-    // Update common options
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: {
-            duration: 750,
-            easing: 'easeInOutQuart'
-        },
-        plugins: {
-            legend: {
-                labels: {
-                    color: colors.text.primary,
-                    font: {
-                        size: 12,
-                        family: "'Inter', sans-serif"
-                    },
-                    padding: 20,
-                    usePointStyle: true,
-                    pointStyle: 'circle'
-                }
-            },
-            tooltip: {
-                backgroundColor: colors.tooltip.background,
-                titleColor: colors.tooltip.text,
-                bodyColor: colors.tooltip.text,
-                borderColor: colors.tooltip.border,
-                borderWidth: 1,
-                padding: 12,
-                cornerRadius: 8,
-                displayColors: true,
-                usePointStyle: true,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.raw || 0;
-                        const prefix = context.dataset.type === 'percentage' ? '' : 'Rp ';
-                        const suffix = context.dataset.type === 'percentage' ? '%' : '';
-                        return `${label}: ${prefix}${value.toLocaleString('id-ID')}${suffix}`;
-                    }
-                }
-            }
-        }
-    };
-
-    // Update each chart
-    Object.values(charts).forEach(chart => {
-        if (chart) {
-            // Update chart options
-            chart.options.plugins.legend.labels.color = colors.text.primary;
-            chart.options.plugins.tooltip.backgroundColor = colors.tooltip.background;
-            chart.options.plugins.tooltip.titleColor = colors.tooltip.text;
-            chart.options.plugins.tooltip.bodyColor = colors.tooltip.text;
-            chart.options.plugins.tooltip.borderColor = colors.tooltip.border;
-
-            // Update scales if they exist
-            if (chart.options.scales) {
-                if (chart.options.scales.x) {
-                    chart.options.scales.x.grid.color = colors.grid.primary;
-                    chart.options.scales.x.grid.borderColor = colors.grid.primary;
-                    chart.options.scales.x.ticks.color = colors.text.secondary;
-                    chart.options.scales.x.border.color = colors.border.light;
-                }
-                if (chart.options.scales.y) {
-                    chart.options.scales.y.grid.color = colors.grid.primary;
-                    chart.options.scales.y.grid.borderColor = colors.grid.primary;
-                    chart.options.scales.y.ticks.color = colors.text.secondary;
-                    chart.options.scales.y.border.color = colors.border.light;
-                }
-            }
-
-            // Update dataset colors based on chart type
-            if (chart.config.type === 'doughnut') {
-                chart.data.datasets.forEach(dataset => {
-                    dataset.borderColor = colors.background.primary;
-                    dataset.backgroundColor = dataset.label.toLowerCase().includes('income') 
-                        ? colors.chart.income 
-                        : colors.chart.expense;
-                });
-            } else if (chart.config.type === 'bar') {
-                chart.data.datasets.forEach(dataset => {
-                    dataset.backgroundColor = dataset.label.toLowerCase().includes('income')
-                        ? colors.chart.income[0]
-                        : colors.chart.expense[0];
-                    dataset.borderColor = colors.background.primary;
-                });
-            } else if (chart.config.type === 'line') {
-                chart.data.datasets.forEach(dataset => {
-                    const colorIndex = dataset.label.toLowerCase().includes('income') ? 0 : 1;
-                    dataset.borderColor = dataset.label.toLowerCase().includes('savings')
-                        ? colors.chart.accent[colorIndex]
-                        : dataset.label.toLowerCase().includes('income')
-                            ? colors.chart.income[colorIndex]
-                            : colors.chart.expense[colorIndex];
-                    dataset.backgroundColor = dataset.borderColor + '20'; // Add transparency
-                });
-            }
-
-            chart.update('none'); // Update without animation for theme changes
-        }
-    });
-
-    // Apply theme to other elements
-    applyThemeToElements();
-}
-
-// Initialize charts with enhanced options
-document.addEventListener('DOMContentLoaded', function() {
-    const theme = getCurrentTheme();
-    const colors = themeColors[theme];
-    
-    // Common chart options
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                labels: {
-                    color: colors.text.primary,
-                    font: {
-                        size: 12
-                    }
-                }
-            },
-            tooltip: {
-                backgroundColor: colors.tooltip.background,
-                titleColor: colors.tooltip.text,
-                bodyColor: colors.tooltip.text,
-                borderColor: colors.tooltip.border,
-                borderWidth: 1,
-                padding: 12,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.raw || 0;
-                        return `${label}: Rp ${value.toLocaleString('id-ID')}`;
-                    }
-                }
-            }
-        }
-    };
-
-    // Initialize chart contexts
-    const expenseCtx = document.getElementById('expenseDistributionChart').getContext('2d');
-    const incomeCtx = document.getElementById('incomeDistributionChart').getContext('2d');
-    const categoryCtx = document.getElementById('categoryComparisonChart').getContext('2d');
-    const trendsCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
-    const savingsCtx = document.getElementById('savingsRateChart').getContext('2d');
-
-    // Get unique categories
-    const categories = {!! json_encode($transactions->pluck('category')->unique()) !!};
-    
-    // Prepare data for category comparison
-    const categoryData = categories.map(category => {
-        const income = {!! json_encode($transactions->where('type', 'income')->where('category', 'PLACEHOLDER')->sum('amount')) !!}.replace('PLACEHOLDER', category);
-        const expense = {!! json_encode($transactions->where('type', 'expense')->where('category', 'PLACEHOLDER')->sum('amount')) !!}.replace('PLACEHOLDER', category);
-        return { category, income: parseFloat(income), expense: parseFloat(expense) };
-    });
-
-    // Initialize all charts
-    charts.expense = new Chart(expenseCtx, {
-        type: 'doughnut',
-        data: {
-            labels: {!! json_encode($transactions->where('type', 'expense')->pluck('category')->unique()) !!},
-            datasets: [{
-                data: {!! json_encode($transactions->where('type', 'expense')->groupBy('category')->map(function($group) {
-                    return $group->sum('amount');
-                })) !!},
-                backgroundColor: [
-                    '#EF4444', // red-500
-                    '#F97316', // orange-500
-                    '#F59E0B', // amber-500
-                    '#EC4899', // pink-600
-                    '#8B5CF6', // violet-500
-                    '#6366F1', // indigo-500
-                    '#3B82F6', // blue-500
-                ],
-                borderWidth: 2,
-                borderColor: colors.background.primary,
-            }]
-        },
-        options: {
-            ...commonOptions,
-            cutout: '70%',
-            plugins: {
-                ...commonOptions.plugins,
-                legend: {
-                    ...commonOptions.plugins.legend,
-                    position: 'right'
-                }
-            }
-        }
-    });
-
-    charts.income = new Chart(incomeCtx, {
-        type: 'doughnut',
-        data: {
-            labels: {!! json_encode($transactions->where('type', 'income')->pluck('category')->unique()) !!},
-            datasets: [{
-                data: {!! json_encode($transactions->where('type', 'income')->groupBy('category')->map(function($group) {
-                    return $group->sum('amount');
-                })) !!},
-                backgroundColor: [
-                    '#10B981', // emerald-500
-                    '#059669', // emerald-600
-                    '#34D399', // emerald-400
-                    '#6EE7B7', // emerald-300
-                    '#A7F3D0', // emerald-200
-                    '#D1FAE5', // emerald-100
-                ],
-                borderWidth: 2,
-                borderColor: colors.background.primary,
-            }]
-        },
-        options: {
-            ...commonOptions,
-            cutout: '70%',
-            plugins: {
-                ...commonOptions.plugins,
-                legend: {
-                    ...commonOptions.plugins.legend,
-                    position: 'right'
-                }
-            }
-        }
-    });
-
-    charts.category = new Chart(categoryCtx, {
-        type: 'bar',
-        data: {
-            labels: categoryData.map(d => d.category),
-            datasets: [
-                {
-                    label: 'Income',
-                    data: categoryData.map(d => d.income),
-                    backgroundColor: '#10B981',
-                    borderRadius: 4,
-                },
-                {
-                    label: 'Expenses',
-                    data: categoryData.map(d => d.expense),
-                    backgroundColor: '#EF4444',
-                    borderRadius: 4,
-                }
-            ]
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: colors.text.primary
-                    }
-                },
-                y: {
-                    grid: {
-                        color: colors.grid.primary,
-                        borderColor: colors.grid.primary
-                    },
-                    ticks: {
-                        color: colors.text.secondary,
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    charts.trends = new Chart(trendsCtx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($transactions->pluck('transaction_date')->map(function($date) {
-                return $date->format('M Y');
-            })->unique()->values()) !!},
-            datasets: [
-                {
-                    label: 'Income',
-                    data: {!! json_encode($transactions->where('type', 'income')->groupBy(function($date) {
-                        return $date->transaction_date->format('M Y');
-                    })->map(function($group) {
-                        return $group->sum('amount');
-                    })) !!},
-                    borderColor: '#10B981',
-                    backgroundColor: '#10B98120',
-                    tension: 0.4,
-                    fill: true
-                },
-                {
-                    label: 'Expenses',
-                    data: {!! json_encode($transactions->where('type', 'expense')->groupBy(function($date) {
-                        return $date->transaction_date->format('M Y');
-                    })->map(function($group) {
-                        return $group->sum('amount');
-                    })) !!},
-                    borderColor: '#EF4444',
-                    backgroundColor: '#EF444420',
-                    tension: 0.4,
-                    fill: true
-                },
-                {
-                    label: 'Net',
-                    data: {!! json_encode($transactions->groupBy(function($date) {
-                        return $date->transaction_date->format('M Y');
-                    })->map(function($group) {
-                        return $group->where('type', 'income')->sum('amount') - $group->where('type', 'expense')->sum('amount');
-                    })) !!},
-                    borderColor: '#3B82F6',
-                    backgroundColor: '#3B82F620',
-                    tension: 0.4,
-                    fill: true
-                }
-            ]
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                x: {
-                    grid: {
-                        color: colors.grid.primary,
-                        borderColor: colors.grid.primary
-                    },
-                    ticks: {
-                        color: colors.text.primary
-                    }
-                },
-                y: {
-                    grid: {
-                        color: colors.grid.primary,
-                        borderColor: colors.grid.primary
-                    },
-                    ticks: {
-                        color: colors.text.secondary,
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    charts.savings = new Chart(savingsCtx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($transactions->pluck('transaction_date')->map(function($date) {
-                return $date->format('M Y');
-            })->unique()->values()) !!},
-            datasets: [{
-                label: 'Savings Rate',
-                data: {!! json_encode($transactions->groupBy(function($date) {
-                    return $date->transaction_date->format('M Y');
-                })->map(function($group) {
-                    $income = $group->where('type', 'income')->sum('amount');
-                    $expense = $group->where('type', 'expense')->sum('amount');
-                    return $income > 0 ? (($income - $expense) / $income) * 100 : 0;
-                })) !!},
-                borderColor: '#8B5CF6',
-                backgroundColor: '#8B5CF620',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            ...commonOptions,
-            scales: {
-                x: {
-                    grid: {
-                        color: colors.grid.primary,
-                        borderColor: colors.grid.primary
-                    },
-                    ticks: {
-                        color: colors.text.primary
-                    }
-                },
-                y: {
-                    grid: {
-                        color: colors.grid.primary,
-                        borderColor: colors.grid.primary
-                    },
-                    ticks: {
-                        color: colors.text.secondary,
-                        callback: function(value) {
-                            return value + '%';
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Listen for theme changes with debounce
-    let themeChangeTimeout;
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class') {
-                clearTimeout(themeChangeTimeout);
-                themeChangeTimeout = setTimeout(() => {
-                    updateChartColors();
-                }, 100); // Debounce theme changes
-            }
-        });
-    });
-
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
-
-    // Initial theme application
-    updateChartColors();
-
-    // Handle period changes
-    document.getElementById('expenseChartPeriod').addEventListener('change', function(e) {
-        console.log('Expense chart period changed to:', e.target.value);
-    });
-
-    document.getElementById('incomeChartPeriod').addEventListener('change', function(e) {
-        console.log('Income chart period changed to:', e.target.value);
-    });
-
-    document.getElementById('savingsChartPeriod').addEventListener('change', function(e) {
-        console.log('Savings chart period changed to:', e.target.value);
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('categoryStackedChart').getContext('2d');
-    const categoryStackedChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($categorySummary->pluck('category')->unique()) !!},
-            datasets: [
-                {
-                    label: 'Income',
-                    data: {!! json_encode($categorySummary->where('type', 'income')->pluck('total')) !!},
-                    backgroundColor: themeColors.chart.income,
-                },
-                {
-                    label: 'Expense',
-                    data: {!! json_encode($categorySummary->where('type', 'expense')->pluck('total')) !!},
-                    backgroundColor: themeColors.chart.expenses,
-                }
-            ]
-        },
-        options: {
+        // Common chart options
+        const commonOptions = {
             responsive: true,
             maintainAspectRatio: false,
+            animation: false,
             plugins: {
                 legend: {
                     position: 'top',
-                    labels: { color: themeColors.text.primary }
-                },
-                tooltip: {
-                    backgroundColor: themeColors.tooltip.background,
-                    titleColor: themeColors.tooltip.title,
-                    bodyColor: themeColors.tooltip.body,
-                    borderColor: themeColors.tooltip.border,
-                    borderWidth: 1,
-                    padding: 12
-                }
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    grid: { color: themeColors.grid },
-                    ticks: { color: themeColors.text.secondary }
-                },
-                y: {
-                    stacked: true,
-                    grid: { color: themeColors.grid },
-                    ticks: { color: themeColors.text.secondary }
+                    labels: {
+                        color: themeColors.text,
+                        boxWidth: 12,
+                        padding: 15
+                    }
                 }
             }
+        };
+
+        try {
+            // Category Stacked Chart
+            const categoryStackedCtx = document.getElementById('categoryStackedChart')?.getContext('2d');
+            if (categoryStackedCtx) {
+                categoryStackedChart = new Chart(categoryStackedCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode($categoryComparison->pluck('category')) !!},
+                        datasets: [
+                            {
+                                label: 'Income',
+                                data: {!! json_encode($categoryComparison->pluck('income')) !!},
+                                backgroundColor: themeColors.accent,
+                                borderColor: themeColors.accent,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Expenses',
+                                data: {!! json_encode($categoryComparison->pluck('expense')) !!},
+                                backgroundColor: themeColors.accent3,
+                                borderColor: themeColors.accent3,
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Income & Expenses by Category',
+                                color: themeColors.text
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: themeColors.text,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                grid: {
+                                    color: themeColors.grid
+                                },
+                                ticks: {
+                                    color: themeColors.text
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Expense Distribution Chart
+            const expenseDistributionCtx = document.getElementById('expenseDistributionChart')?.getContext('2d');
+            if (expenseDistributionCtx) {
+                expenseDistributionChart = new Chart(expenseDistributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {!! json_encode($expenseCategories->pluck('category')) !!},
+                        datasets: [{
+                            data: {!! json_encode($expenseCategories->pluck('amount')) !!},
+                            backgroundColor: [
+                                themeColors.accent,
+                                themeColors.accent2,
+                                themeColors.accent3,
+                                themeColors.accent4,
+                                themeColors.accent5,
+                                themeColors.accent6
+                            ],
+                            borderColor: themeColors.background,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Expense Distribution',
+                                color: themeColors.text
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            // Income Distribution Chart
+            const incomeDistributionCtx = document.getElementById('incomeDistributionChart')?.getContext('2d');
+            if (incomeDistributionCtx) {
+                incomeDistributionChart = new Chart(incomeDistributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {!! json_encode($incomeCategories->pluck('category')) !!},
+                        datasets: [{
+                            data: {!! json_encode($incomeCategories->pluck('amount')) !!},
+                            backgroundColor: [
+                                themeColors.accent,
+                                themeColors.accent2,
+                                themeColors.accent3,
+                                themeColors.accent4,
+                                themeColors.accent5,
+                                themeColors.accent6
+                            ],
+                            borderColor: themeColors.background,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Income Distribution',
+                                color: themeColors.text
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            // Monthly Trends Chart
+            const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart')?.getContext('2d');
+            if (monthlyTrendsCtx) {
+                monthlyTrendsChart = new Chart(monthlyTrendsCtx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($monthlyTrends->pluck('month')) !!},
+                        datasets: [
+                            {
+                                label: 'Income',
+                                data: {!! json_encode($monthlyTrends->pluck('income')) !!},
+                                borderColor: themeColors.accent,
+                                backgroundColor: themeColors.accent + '20',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Expenses',
+                                data: {!! json_encode($monthlyTrends->pluck('expense')) !!},
+                                borderColor: themeColors.accent3,
+                                backgroundColor: themeColors.accent3 + '20',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Net',
+                                data: {!! json_encode($monthlyTrends->pluck('net')) !!},
+                                borderColor: themeColors.accent2,
+                                backgroundColor: themeColors.accent2 + '20',
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Monthly Trends',
+                                color: themeColors.text
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: themeColors.text
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: themeColors.grid
+                                },
+                                ticks: {
+                                    color: themeColors.text
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Savings Rate Chart
+            const savingsRateCtx = document.getElementById('savingsRateChart')?.getContext('2d');
+            if (savingsRateCtx) {
+                savingsRateChart = new Chart(savingsRateCtx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($savingsRateTrend->pluck('month')) !!},
+                        datasets: [{
+                            label: 'Savings Rate (%)',
+                            data: {!! json_encode($savingsRateTrend->pluck('rate')) !!},
+                            borderColor: themeColors.accent2,
+                            backgroundColor: themeColors.accent2 + '20',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        plugins: {
+                            ...commonOptions.plugins,
+                            title: {
+                                display: true,
+                                text: 'Monthly Savings Rate',
+                                color: themeColors.text
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: themeColors.text
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: themeColors.grid
+                                },
+                                ticks: {
+                                    color: themeColors.text,
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            chartsInitialized = true;
+        } catch (error) {
+            console.error('Error initializing charts:', error);
+            destroyAllCharts();
+        }
+    }
+
+    // Initialize charts when the DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCharts);
+    } else {
+        initializeCharts();
+    }
+
+    // Update charts when theme changes
+    document.addEventListener('themeChanged', function() {
+        destroyAllCharts();
+        initializeCharts();
+    });
+
+    // Cleanup charts when page is unloaded
+    window.addEventListener('beforeunload', destroyAllCharts);
+
+    // Update charts when page visibility changes
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            destroyAllCharts();
+            initializeCharts();
         }
     });
-});
 </script>
-@endpush
-@endsection 
+@endpush 

@@ -38,7 +38,7 @@ class AnalysisController extends Controller
             $transactions = $query->whereBetween('transaction_date', [$startDate, $endDate])->get();
             
             // Calculate financial metrics
-            $metrics = $this->calculateFinancialMetrics($transactions, $analysisType);
+            $metrics = $this->calculateFinancialMetrics($transactions, $analysisType, $user);
             
 
             // Format category data for chart
@@ -67,7 +67,7 @@ class AnalysisController extends Controller
         }
     }
 
-    private function calculateFinancialMetrics($transactions, $analysisType)
+    private function calculateFinancialMetrics($transactions, $analysisType, $user)
     {
         $totalIncome = $transactions->where('type', 'income')->sum('amount');
         $totalExpenses = $transactions->where('type', 'expense')->sum('amount');
@@ -85,22 +85,18 @@ class AnalysisController extends Controller
         // Calculate expense ratios
         $expenseRatio = $totalIncome > 0 ? ($totalExpenses / $totalIncome) * 100 : 0;
 
-        // Additional financial ratios
-        $cashFlow = $totalIncome - $totalExpenses; // Simplified for this example
+        // Additional financial ratios - normalized to percentages for better visualization
+        $cashFlow = $totalIncome - $totalExpenses;
         $cashFlowRatio = $totalIncome > 0 ? ($cashFlow / $totalIncome) * 100 : 0;
         
-        $operatingIncome = $totalIncome - $totalExpenses; // Assuming no other COGS/Operating expenses
+        $operatingIncome = $totalIncome - $totalExpenses;
         $operatingMargin = $totalIncome > 0 ? ($operatingIncome / $totalIncome) * 100 : 0;
         
-        // For growth rate and profitability index, you might need historical data or more complex logic.
-        // For now, I'll set them to illustrative values or simplified calculations.
-        $previousNetIncome = 0; // You'd fetch this from historical data
+        // Calculate growth rate
         if ($analysisType === 'monthly') {
-            // Fetch previous month's net income for growth rate
             $previousMonth = Carbon::now()->subMonth()->startOfMonth();
             $previousMonthEnd = Carbon::now()->subMonth()->endOfMonth();
         } else {
-            // Fetch previous year's net income for growth rate
             $previousMonth = Carbon::now()->subYear()->startOfYear();
             $previousMonthEnd = Carbon::now()->subYear()->endOfYear();
         }
@@ -112,11 +108,19 @@ class AnalysisController extends Controller
         $previousTotalExpenses = $previousTransactions->where('type', 'expense')->sum('amount');
         $previousNetIncome = $previousTotalIncome - $previousTotalExpenses;
 
-        $growthRate = $previousNetIncome > 0 ? (($netIncome - $previousNetIncome) / $previousNetIncome) * 100 : 0;
+        // Calculate growth rate and cap it at 100% for visualization
+        $growthRate = $previousNetIncome > 0 ? min(100, max(-100, (($netIncome - $previousNetIncome) / $previousNetIncome) * 100)) : 0;
 
-        // Profitability Index - very simplified, you'd usually need future cash flows and initial investment
-        // For demo purposes, let's use a simple representation based on net income
-        $profitabilityIndex = $totalIncome > 0 ? ($netIncome / $totalIncome) : 0;
+        // Convert profitability index to percentage and cap at 100%
+        $profitabilityIndex = $totalIncome > 0 ? min(100, max(0, ($netIncome / $totalIncome) * 100)) : 0;
+
+        // Store raw values for tooltips
+        $rawMetrics = [
+            'cash_flow_ratio' => $cashFlowRatio,
+            'operating_margin' => $operatingMargin,
+            'growth_rate' => $growthRate,
+            'profitability_index' => $profitabilityIndex
+        ];
 
         return [
             'total_income' => $totalIncome,
@@ -127,6 +131,7 @@ class AnalysisController extends Controller
             'operating_margin' => $operatingMargin,
             'growth_rate' => $growthRate,
             'profitability_index' => $profitabilityIndex,
+            'raw_metrics' => $rawMetrics, // Store raw values for tooltips
             'category_distribution' => $categoryDistribution,
             'transaction_count' => $transactions->count(),
             'average_transaction' => $transactions->avg('amount'),

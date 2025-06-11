@@ -46,7 +46,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
@@ -55,3 +54,12 @@ Route::get('/analyze-form', function () {
 });
 
 Route::post('/finance/analyze', [FinanceController::class, 'analyzeFinancialData']);
+
+// Settings Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.updateProfile');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.updatePassword');
+    Route::put('/settings/preferences', [SettingsController::class, 'updatePreferences'])->name('settings.updatePreferences');
+    Route::put('/settings/security', [SettingsController::class, 'updateSecurity'])->name('settings.updateSecurity');
+});

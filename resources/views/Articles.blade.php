@@ -87,6 +87,66 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ asset('js/app.js') }}"></script>
+  <script src="{{ asset('js/theme.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize articles section
+      const sectionArticles = document.getElementById('sectionArticles');
+      if (sectionArticles) {
+        // Make sure the section is visible when articles nav is clicked
+        const navArticles = document.getElementById('navArticles');
+        if (navArticles) {
+          navArticles.addEventListener('click', function() {
+            sectionArticles.classList.remove('hidden');
+          });
+        }
+      }
+
+      // Initialize any article categories if needed
+      const articles = document.querySelectorAll('#sectionArticles article');
+      articles.forEach((article, index) => {
+        // Add category-specific handling
+        const categoryNum = (index % 6) + 1; // Cycle through categories 1-6
+        const category = `category${categoryNum}`;
+        article.dataset.category = category;
+        
+        // Apply category-specific styling
+        const currentTheme = getCurrentTheme();
+        const categoryColor = themeColors[currentTheme].chart[category];
+        if (categoryColor) {
+          article.style.borderColor = categoryColor;
+          const readMoreLink = article.querySelector('a');
+          if (readMoreLink) {
+            readMoreLink.style.color = categoryColor;
+          }
+        }
+      });
+
+      // Initialize any charts if needed
+      const chartElements = document.querySelectorAll('[data-chart]');
+      chartElements.forEach(element => {
+        const chartType = element.dataset.chart;
+        const category = element.dataset.category || 'category1';
+        const currentTheme = getCurrentTheme();
+        
+        if (Chart && element.getContext) {
+          new Chart(element.getContext('2d'), {
+            type: chartType,
+            data: {
+              // Your chart data here
+              datasets: [{
+                backgroundColor: themeColors[currentTheme].chart[category],
+                // ... other dataset properties
+              }]
+            },
+            options: {
+              // Your chart options here
+            }
+          });
+        }
+      });
+    });
+  </script>
  </body>
 </html>
 @endsection

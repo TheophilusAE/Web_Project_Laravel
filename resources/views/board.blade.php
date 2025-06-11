@@ -199,818 +199,546 @@
       </label>
       <select class="w-full border border-green-600 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700 bg-green-50 text-green-900" id="category" required="">
        <optgroup label="Income Categories">
-        <option value="Penjualan Helm">
-         Penjualan Helm
+        <option value="Sales">
+         Sales
         </option>
-        <option value="Jasa Cuci Helm">
-         Jasa Cuci Helm
-        </option>
-        <option value="Lainnya">
-         Lainnya
+        <option value="Other Income">
+         Other Income
         </option>
        </optgroup>
        <optgroup label="Expense Categories">
-        <option value="Bahan Pembersih">
-         Bahan Pembersih
+        <option value="Raw Materials">
+         Raw Materials
         </option>
-        <option value="Gaji Karyawan">
-         Gaji Karyawan
+        <option value="Labor">
+         Labor
         </option>
-        <option value="Perawatan Helm">
-         Perawatan Helm
+        <option value="Rent">
+         Rent
         </option>
-        <option value="Listrik &amp; Air">
-         Listrik &amp; Air
+        <option value="Utilities">
+         Utilities
         </option>
-        <option value="Lainnya">
-         Lainnya
+        <option value="Marketing">
+         Marketing
+        </option>
+        <option value="Other Expenses">
+         Other Expenses
         </option>
        </optgroup>
       </select>
      </div>
      <div class="mb-5">
       <label class="block text-sm font-semibold text-green-900 mb-2" for="amount">
-       Amount (Rp)
+       Amount (Rupiah)
       </label>
-      <input class="w-full border border-green-600 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700 bg-green-50 text-green-900" id="amount" min="0.01" placeholder="0" required="" step="0.01" type="number"/>
+      <input class="w-full border border-green-600 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700 bg-green-50 text-green-900" id="amount" min="0" required="" step="any" type="number"/>
      </div>
-     <div class="mb-6">
+     <div class="mb-5">
       <label class="block text-sm font-semibold text-green-900 mb-2" for="date">
        Date
       </label>
       <input class="w-full border border-green-600 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700 bg-green-50 text-green-900" id="date" required="" type="date"/>
      </div>
-     <button class="w-full bg-green-700 text-white font-semibold py-3 rounded-lg hover:bg-green-800 transition" type="submit">
+     <div class="mb-5">
+      <label class="block text-sm font-semibold text-green-900 mb-2" for="description">
+       Description (Optional)
+      </label>
+      <input class="w-full border border-green-600 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-700 bg-green-50 text-green-900" id="description" type="text"/>
+     </div>
+     <button class="w-full bg-green-700 text-white font-semibold py-2 rounded-lg hover:bg-green-800 transition duration-300" type="submit">
       Add Transaction
      </button>
     </form>
-    <div class="bg-white rounded-lg p-6 shadow-md overflow-x-auto border-2 border-[#4a5a4a]">
-     <h3 class="text-lg font-semibold mb-4 text-[#1a2a1a] text-center border-b-2 border-[#4a5a4a] pb-2">
-      Transactions
+    <div class="bg-white rounded-lg p-6 shadow-md max-w-full max-h-[400px] overflow-y-auto border-2 border-[#4a5a4a]">
+     <h3 class="text-lg font-semibold mb-4 text-[#1a2a1a] border-b-2 border-[#4a5a4a] pb-2">
+      Transaction History
      </h3>
-     <table class="w-full text-left text-sm text-[#4a5a4a] border-collapse border border-[#4a5a4a] rounded-lg">
+     <table class="min-w-full bg-white rounded-lg overflow-hidden">
       <thead>
-       <tr class="bg-green-100 border-b-2 border-[#4a5a4a]">
-        <th class="py-3 px-4 border-r-2 border-[#4a5a4a]">
+       <tr>
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
          Date
         </th>
-        <th class="py-3 px-4 border-r-2 border-[#4a5a4a]">
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
          Type
         </th>
-        <th class="py-3 px-4 border-r-2 border-[#4a5a4a]">
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
          Category
         </th>
-        <th class="py-3 px-4">
-         Amount (Rp)
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
+         Amount
+        </th>
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
+         Description
+        </th>
+        <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1a2a1a]">
+         Actions
         </th>
        </tr>
       </thead>
-      <tbody id="transactionsTableBody">
+      <tbody id="transactionTableBody">
       </tbody>
      </table>
-     <div class="mt-6 flex flex-col md:flex-row justify-end gap-8 text-[#1a2a1a] font-semibold text-right border-t-2 border-[#4a5a4a] pt-4">
-      <div>
-       Total Income:
-       <span id="totalIncome">
-        Rp0
-       </span>
-      </div>
-      <div>
-       Total Expense:
-       <span id="totalExpense">
-        Rp0
-       </span>
-      </div>
-      <div>
-       Balance:
-       <span id="balance">
-        Rp0
-       </span>
-      </div>
-     </div>
     </div>
    </section>
    <!-- Statistics Section -->
-   <section class="hidden max-w-6xl mx-auto w-full" id="sectionStatistics">
-    <h2 class="text-[#1a2a1a] font-semibold text-3xl mb-8 select-none text-center tracking-wide">
-     Financial Statistics &amp; Analysis
+   <section class="hidden max-w-4xl mx-auto w-full" id="sectionStatistics">
+    <h2 class="text-[#1a2a1a] font-semibold text-xl mb-6 select-none text-center">
+     Financial Statistics
     </h2>
-    <div class="bg-white rounded-xl p-8 shadow-xl max-w-full border-2 border-[#4a5a4a]">
-     <h3 class="text-2xl font-bold mb-6 text-[#1a2a1a] text-center tracking-tight border-b-2 border-[#4a5a4a] pb-4">
-      Monthly Summary
-     </h3>
-     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-      <div class="p-6 bg-gradient-to-tr from-green-200 to-green-400 rounded-2xl text-green-900 shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-transform duration-300 border-2 border-green-700">
-       <div class="flex items-center gap-3 mb-3">
-        <i class="fas fa-wallet fa-2x">
-        </i>
-        <h4 class="font-semibold text-lg">
-         Total Income
-        </h4>
-       </div>
-       <p class="text-3xl font-extrabold" id="statIncome">
-        Rp0
-       </p>
-       <img alt="Decorative green upward arrow icon representing income growth" class="mt-4 w-16 h-16 opacity-30" height="64" src="https://storage.googleapis.com/a1aa/image/c90fb311-e10b-4641-ebb8-0f0e7a0538ec.jpg" width="64"/>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+     <div class="bg-white rounded-lg p-6 shadow-md text-[#1a2a1a]">
+      <h3 class="text-lg font-semibold mb-4 border-b-2 border-[#4a5a4a] pb-2">
+       Category Distribution
+      </h3>
+      <canvas id="categoryChart"></canvas>
+     </div>
+     <div class="bg-white rounded-lg p-6 shadow-md text-[#1a2a1a]">
+      <h3 class="text-lg font-semibold mb-4 border-b-2 border-[#4a5a4a] pb-2">
+       Monthly Trends
+      </h3>
+      <canvas id="monthlyChart"></canvas>
+     </div>
+     <div class="bg-gradient-to-br from-[#0a2a1a] via-[#0f3a2a] to-[#1a4a3a] rounded-[20px] p-6 text-white select-none flex flex-col justify-center items-center shadow-lg shadow-green-900/50 border-2 border-green-700">
+      <div class="text-xs font-semibold mb-2 tracking-wide uppercase">
+       Total Savings
       </div>
-      <div class="p-6 bg-gradient-to-tr from-red-200 to-red-400 rounded-2xl text-red-900 shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-transform duration-300 border-2 border-red-700">
-       <div class="flex items-center gap-3 mb-3">
-        <i class="fas fa-credit-card fa-2x">
-        </i>
-        <h4 class="font-semibold text-lg">
-         Total Expense
-        </h4>
-       </div>
-       <p class="text-3xl font-extrabold" id="statExpense">
-        Rp0
-       </p>
-       <img alt="Decorative red downward arrow icon representing expense" class="mt-4 w-16 h-16 opacity-30" height="64" src="https://storage.googleapis.com/a1aa/image/7397f4f2-3534-4a80-f157-a52fb7509b06.jpg" width="64"/>
+      <div class="text-4xl font-extrabold leading-[1.1]" id="totalSavings">
+       Rp0
       </div>
-      <div class="p-6 bg-gradient-to-tr from-blue-200 to-blue-400 rounded-2xl text-blue-900 shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-transform duration-300 border-2 border-blue-700">
-       <div class="flex items-center gap-3 mb-3">
-        <i class="fas fa-balance-scale fa-2x">
-        </i>
-        <h4 class="font-semibold text-lg">
-         Balance
-        </h4>
-       </div>
-       <p class="text-3xl font-extrabold" id="statBalance">
-        Rp0
-       </p>
-       <img alt="Decorative blue balance scale icon representing financial balance" class="mt-4 w-16 h-16 opacity-30" height="64" src="https://storage.googleapis.com/a1aa/image/9faa2418-969c-4218-d9d2-b68ff46d28eb.jpg" width="64"/>
+      <div class="text-[10px] mt-3 text-[#a0b0a0] flex items-center gap-1">
+       <i class="fas fa-piggy-bank text-green-400">
+       </i>
+       Your current savings
       </div>
      </div>
-     <h3 class="text-2xl font-bold mb-6 text-[#1a2a1a] text-center tracking-tight border-b-2 border-[#4a5a4a] pb-4">
-      Expense by Category
-     </h3>
-     <div class="mb-12 rounded-xl shadow-lg p-6 bg-gradient-to-br from-red-50 to-red-100 border-2 border-[#4a5a4a]">
-      <canvas class="w-full h-72 rounded-xl" id="expenseChartCanvas">
-      </canvas>
-     </div>
-     <h3 class="text-2xl font-bold mb-6 text-[#1a2a1a] text-center tracking-tight border-b-2 border-[#4a5a4a] pb-4">
-      Income by Category
-     </h3>
-     <div class="rounded-xl shadow-lg p-6 bg-gradient-to-br from-green-50 to-green-100 border-2 border-[#4a5a4a] mb-12">
-      <canvas class="w-full h-72 rounded-xl" id="incomeChartCanvas">
-      </canvas>
-     </div>
-     <h3 class="text-2xl font-bold mb-6 text-[#1a2a1a] text-center tracking-tight border-b-2 border-[#4a5a4a] pb-4">
-      Income &amp; Outcome Over Time
-     </h3>
-     <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-6 max-w-md mx-auto">
-      <label for="timeRange" class="font-semibold text-[#1a2a1a]">View by:</label>
-      <select id="timeRange" class="border border-[#4a5a4a] rounded-lg px-4 py-2 text-[#1a2a1a] focus:outline-none focus:ring-2 focus:ring-[#4a5a4a]">
-       <option value="month" selected>Monthly</option>
-       <option value="year">Yearly</option>
-      </select>
-     </div>
-     <div class="rounded-xl shadow-lg p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-[#4a5a4a]">
-      <canvas class="w-full h-80 rounded-xl" id="incomeOutcomeChartCanvas">
-      </canvas>
+     <div class="bg-gradient-to-br from-[#4a1a1a] via-[#6a1a1a] to-[#8a1a1a] rounded-[20px] p-6 text-white select-none flex flex-col justify-center items-center shadow-lg shadow-red-900/50 border-2 border-red-700">
+      <div class="text-xs font-semibold mb-2 tracking-wide uppercase">
+       Burn Rate
+      </div>
+      <div class="text-4xl font-extrabold leading-[1.1]" id="burnRate">
+       Rp0/month
+      </div>
+      <div class="text-[10px] mt-3 text-[#a0a0a0] flex items-center gap-1">
+       <i class="fas fa-fire text-red-400">
+       </i>
+       Monthly spending rate
+      </div>
      </div>
     </div>
    </section>
    <!-- Articles Section -->
-   <section class="hidden max-w-6xl mx-auto w-full" id="sectionArticles">
-    <h2 class="text-[#1a2a1a] font-semibold text-2xl mb-8 select-none text-center">
-     Financial Management Articles for UMKM Helm &amp; Cuci Helm
+   <section class="hidden max-w-4xl mx-auto w-full" id="sectionArticles">
+    <h2 class="text-[#1a2a1a] font-semibold text-xl mb-6 select-none text-center">
+     Financial Articles
     </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of a small business owner planning finances with charts and notes on a desk" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/92431ef4-afe5-46df-7c1c-8dee7f85bf88.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Financial Planning for UMKM Helm &amp; Cuci Helm
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Pelajari cara membuat perencanaan keuangan yang efektif untuk bisnis helm dan jasa cuci helm Anda agar dapat mengelola arus kas dan investasi dengan baik.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of cash flow management with money and calendar icons" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/6c73bbad-3cc8-4f45-b868-fcf9add7d953.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Managing Cash Flow in Your Helm Business
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Tips dan trik mengelola arus kas agar bisnis helm dan cuci helm Anda tetap sehat dan mampu menghadapi tantangan keuangan sehari-hari.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of cost control with calculator and budget sheets" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/b983eac8-f7a7-4c09-41ba-0df39fc8a894.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Cost Control Strategies for UMKM
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Pelajari strategi pengendalian biaya yang dapat membantu bisnis helm dan cuci helm Anda meningkatkan profitabilitas tanpa mengurangi kualitas layanan.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of marketing budget planning with charts and money" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/4dde4880-7185-4aa0-96e2-00dc16b05486.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Marketing Budget Tips for Small Businesses
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Cara mengalokasikan anggaran pemasaran secara efektif untuk meningkatkan penjualan helm dan jasa cuci helm Anda tanpa membebani keuangan.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of saving and investment with piggy bank and coins" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/86dec276-86d9-4b27-31ab-9dba883557f4.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Saving and Investment for UMKM Owners
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Panduan menabung dan berinvestasi untuk pemilik UMKM helm dan cuci helm agar bisnis dan keuangan pribadi tetap berkembang.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
-     <article class="bg-white rounded-lg shadow-md p-6 flex flex-col border-2 border-[#4a5a4a]">
-      <img alt="Illustration of debt management with documents and calculator" class="rounded-lg mb-4 w-full object-cover h-48" height="300" src="https://storage.googleapis.com/a1aa/image/e89870a2-710d-4dae-9d82-9a556dad39c7.jpg" width="600"/>
-      <h3 class="text-xl font-semibold mb-2 text-[#1a2a1a]">
-       Effective Debt Management for Small Businesses
-      </h3>
-      <p class="text-gray-700 flex-grow">
-       Tips mengelola hutang usaha agar bisnis helm dan cuci helm Anda tetap sehat dan terhindar dari masalah keuangan.
-      </p>
-      <a class="mt-4 text-green-700 font-semibold hover:underline self-start" href="#">
-       Read More
-      </a>
-     </article>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="articlesList">
+     <!-- Articles will be loaded here by JavaScript -->
+    </div>
+   </section>
+   <!-- Profile Section -->
+   <section class="hidden max-w-4xl mx-auto w-full" id="sectionProfile">
+    <h2 class="text-[#1a2a1a] font-semibold text-xl mb-6 select-none text-center">
+     Profile Settings
+    </h2>
+    <div class="bg-white rounded-lg p-6 shadow-md border-2 border-[#4a5a4a]">
+     <h3 class="text-lg font-semibold mb-4 text-[#1a2a1a] border-b-2 border-[#4a5a4a] pb-2">
+      User Information
+     </h3>
+     <form>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="username">
+        Username
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="username" type="text" value="User123"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="email">
+        Email
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="email" type="email" value="user@example.com"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="businessName">
+        Business Name
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="businessName" type="text" value="UMKM Helm Bersih"/>
+      </div>
+      <button class="bg-[#1a2a1a] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#2a3a2a] transition duration-300" type="submit">
+       Save Changes
+      </button>
+     </form>
+    </div>
+    <div class="bg-white rounded-lg p-6 shadow-md mt-6 border-2 border-[#4a5a4a]">
+     <h3 class="text-lg font-semibold mb-4 text-[#1a2a1a] border-b-2 border-[#4a5a4a] pb-2">
+      Password Settings
+     </h3>
+     <form>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="currentPassword">
+        Current Password
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="currentPassword" type="password"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="newPassword">
+        New Password
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="newPassword" type="password"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-medium text-[#1a2a1a] mb-2" for="confirmPassword">
+        Confirm New Password
+       </label>
+       <input class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[#6b7a6b] bg-gray-50 text-[#1a2a1a]" id="confirmPassword" type="password"/>
+      </div>
+      <button class="bg-[#1a2a1a] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#2a3a2a] transition duration-300" type="submit">
+       Change Password
+      </button>
+     </form>
     </div>
    </section>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js">
-  </script>
   <script>
-   const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const toggleSidebarMain = document.getElementById("sidebarToggleMain");
-    const contentWrapper = document.getElementById("contentWrapper");
-
-    const navDashboard = document.getElementById("navDashboard");
-    const navReport = document.getElementById("navReport");
-    const navStatistics = document.getElementById("navStatistics");
-    const navArticles = document.getElementById("navArticles");
-    const sectionDashboard = document.getElementById("sectionDashboard");
-    const sectionReport = document.getElementById("sectionReport");
-    const sectionStatistics = document.getElementById("sectionStatistics");
-    const sectionArticles = document.getElementById("sectionArticles");
-
-    let transactions = [];
-
-    const transactionForm = document.getElementById("transactionForm");
-    const transactionsTableBody = document.getElementById("transactionsTableBody");
-    const totalIncomeEl = document.getElementById("totalIncome");
-    const totalExpenseEl = document.getElementById("totalExpense");
-    const balanceEl = document.getElementById("balance");
-
-    const dashboardIncomeEl = document.getElementById("dashboardIncome");
-    const dashboardOutcomeEl = document.getElementById("dashboardOutcome");
-    const dashboardTransactionList = document.getElementById("dashboardTransactionList");
-
-    const statIncome = document.getElementById("statIncome");
-    const statExpense = document.getElementById("statExpense");
-    const statBalance = document.getElementById("statBalance");
-    const expenseCategoryChartEl = document.getElementById("expenseCategoryChart");
-    const incomeCategoryChartEl = document.getElementById("incomeCategoryChart");
-    const incomeOutcomeChartCanvas = document.getElementById("incomeOutcomeChartCanvas");
-    const timeRangeSelect = document.getElementById("timeRange");
-
-    let expenseChart, incomeChart, incomeOutcomeChart;
-
-    // Format number to Indonesian Rupiah currency string
-    function formatRupiah(value) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-    }
-
-    // Sidebar toggle functions
-    function openSidebar() {
-      sidebar.classList.remove("-translate-x-full");
-      overlay.classList.remove("hidden");
-      contentWrapper.classList.add("sidebar-open");
-    }
-
-    function closeSidebar() {
-      sidebar.classList.add("-translate-x-full");
-      overlay.classList.add("hidden");
-      contentWrapper.classList.remove("sidebar-open");
-    }
+   const sidebar = document.getElementById('sidebar');
+    const sidebarToggleMain = document.getElementById('sidebarToggleMain');
+    const overlay = document.getElementById('overlay');
+    const contentWrapper = document.getElementById('contentWrapper');
 
     function toggleSidebar() {
-      if (sidebar.classList.contains("-translate-x-full")) {
-        openSidebar();
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+      contentWrapper.classList.toggle('sidebar-open');
+    }
+
+    // Toggle sidebar on button click
+    sidebarToggleMain.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // Switch sections based on navigation
+    document.getElementById('navDashboard').addEventListener('click', () => showSection('sectionDashboard'));
+    document.getElementById('navReport').addEventListener('click', () => showSection('sectionReport'));
+    document.getElementById('navStatistics').addEventListener('click', () => showSection('sectionStatistics'));
+    document.getElementById('navArticles').addEventListener('click', () => showSection('sectionArticles'));
+    document.getElementById('navProfile').addEventListener('click', () => showSection('sectionProfile'));
+
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('section[id^="section"]');
+      sections.forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+
+      // Update active navigation button
+      const navButtons = document.querySelectorAll('nav button');
+      navButtons.forEach(button => {
+        button.classList.remove('bg-[#1a2a1a]', 'text-white');
+        button.classList.add('hover:text-[#a0b0a0]');
+      });
+      document.getElementById('nav' + sectionId.replace('section', '')).classList.add('bg-[#1a2a1a]', 'text-white');
+      document.getElementById('nav' + sectionId.replace('section', '')).classList.remove('hover:text-[#a0b0a0]');
+
+      // Close sidebar on mobile after navigation
+      if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+        toggleSidebar();
+      }
+    }
+
+    // Initialize dashboard data (example data, replace with actual data from backend)
+    let transactions = [];
+    const dashboardIncomeEl = document.getElementById('dashboardIncome');
+    const dashboardOutcomeEl = document.getElementById('dashboardOutcome');
+    const dashboardTransactionList = document.getElementById('dashboardTransactionList');
+    const totalSavingsEl = document.getElementById('totalSavings');
+    const burnRateEl = document.getElementById('burnRate');
+    const categoryChartCtx = document.getElementById('categoryChart');
+    const monthlyChartCtx = document.getElementById('monthlyChart');
+
+    // Function to format Rupiah
+    function formatRupiah(amount) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+    }
+
+    // Load transactions from local storage or use default
+    function loadTransactions() {
+      const storedTransactions = localStorage.getItem('transactions');
+      if (storedTransactions) {
+        transactions = JSON.parse(storedTransactions);
       } else {
-        closeSidebar();
+        transactions = []; // Default empty array
       }
-    }
-
-    toggleSidebarMain.addEventListener("click", toggleSidebar);
-    overlay.addEventListener("click", closeSidebar);
-
-    // Navigation between pages
-    function setActiveNav(activeNav) {
-      [navDashboard, navReport, navStatistics, navArticles].forEach((nav) => {
-        nav.classList.remove("bg-[#1a2a1a]", "text-white");
-      });
-      activeNav.classList.add("bg-[#1a2a1a]", "text-white");
-    }
-
-    function navClickHandler(navButton, showSection) {
-      navButton.addEventListener("click", () => {
-        setActiveNav(navButton);
-        sectionDashboard.classList.add("hidden");
-        sectionReport.classList.add("hidden");
-        sectionStatistics.classList.add("hidden");
-        sectionArticles.classList.add("hidden");
-        showSection.classList.remove("hidden");
-        closeSidebar();
-      });
-    }
-
-    navClickHandler(navDashboard, sectionDashboard);
-    navClickHandler(navReport, sectionReport);
-    navClickHandler(navStatistics, sectionStatistics);
-    navClickHandler(navArticles, sectionArticles);
-
-    // Initialize with Dashboard active
-    navDashboard.click();
-
-    // Add transaction handler
-    transactionForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const type = transactionForm.type.value;
-      const category = transactionForm.category.value;
-      const amount = parseFloat(transactionForm.amount.value);
-      const date = transactionForm.date.value;
-
-      if (!category || !date || isNaN(amount) || amount <= 0) {
-        alert("Please fill all fields correctly.");
-        return;
-      }
-
-      transactions.push({ type, category, amount, date });
-      transactionForm.reset();
-      updateReportTable();
-      updateStatistics();
       updateDashboard();
+      updateCharts();
+    }
+
+    // Save transactions to local storage
+    function saveTransactions() {
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+    }
+
+    // Add transaction
+    document.getElementById('transactionForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const type = document.getElementById('type').value;
+      const category = document.getElementById('category').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value;
+
+      transactions.push({ type, category, amount, date, description });
+      saveTransactions();
+      updateDashboard();
+      updateCharts();
+      this.reset(); // Clear form
     });
 
-    // Update report table and totals
-    function updateReportTable() {
-      transactionsTableBody.innerHTML = "";
-      let totalIncome = 0;
-      let totalExpense = 0;
+    // Delete transaction
+    function deleteTransaction(index) {
+      transactions.splice(index, 1);
+      saveTransactions();
+      updateDashboard();
+      updateCharts();
+    }
 
-      // Sort transactions by date descending
+    // Update dashboard income, outcome, recent transactions
+    function updateDashboard() {
+      let totalIncome = 0;
+      let totalOutcome = 0;
+
+      // Calculate totals
+      for (const t of transactions) {
+        if (t.type === "income") totalIncome += t.amount;
+        else totalOutcome += t.amount;
+      }
+
+      dashboardIncomeEl.textContent = formatRupiah(totalIncome);
+      dashboardOutcomeEl.textContent = formatRupiah(totalOutcome);
+
+      // Update recent transactions list (show latest 7)
+      dashboardTransactionList.innerHTML = "";
       const sorted = [...transactions].sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
-
-      for (const t of sorted) {
-        const tr = document.createElement("tr");
-        tr.classList.add("border-b", "border-gray-300");
-        tr.innerHTML = `
-          <td class="py-2 px-3">${t.date}</td>
-          <td class="py-2 px-3 capitalize">${t.type}</td>
-          <td class="py-2 px-3">${t.category}</td>
-          <td class="py-2 px-3 ${
+      const recent = sorted.slice(0, 7);
+      for (const t of recent) {
+        const li = document.createElement("li");
+        li.className = "py-2 flex justify-between items-center";
+        li.innerHTML = `
+          <div>
+            <div class="font-semibold text-sm text-[#1a2a1a]">${t.category}</div>
+            <div class="text-[10px] text-gray-500">${t.date}</div>
+          </div>
+          <div class="${
             t.type === "income" ? "text-green-600" : "text-red-600"
-          } font-semibold">${formatRupiah(t.amount)}</td>
+          } font-semibold">${formatRupiah(t.amount)}</div>
         `;
-        transactionsTableBody.appendChild(tr);
-
-        if (t.type === "income") totalIncome += t.amount;
-        else totalExpense += t.amount;
+        dashboardTransactionList.appendChild(li);
       }
-
-      totalIncomeEl.textContent = formatRupiah(totalIncome);
-      totalExpenseEl.textContent = formatRupiah(totalExpense);
-      balanceEl.textContent = formatRupiah(totalIncome - totalExpense);
     }
 
-    // Update statistics charts and summary
-    function updateStatistics() {
-      // Calculate totals
-      let totalIncome = 0;
-      let totalExpense = 0;
+    let categoryChart, monthlyChart;
+
+    // Update charts
+    function updateCharts() {
       const incomeByCategory = {};
       const expenseByCategory = {};
-
-      for (const t of transactions) {
-        if (t.type === "income") {
-          totalIncome += t.amount;
-          incomeByCategory[t.category] =
-            (incomeByCategory[t.category] || 0) + t.amount;
-        } else {
-          totalExpense += t.amount;
-          expenseByCategory[t.category] =
-            (expenseByCategory[t.category] || 0) + t.amount;
-        }
-      }
-
-      statIncome.textContent = formatRupiah(totalIncome);
-      statExpense.textContent = formatRupiah(totalExpense);
-      statBalance.textContent = formatRupiah(totalIncome - totalExpense);
-
-      // Prepare data for charts
-      const expenseLabels = Object.keys(expenseByCategory);
-      const expenseData = Object.values(expenseByCategory);
-
-      const incomeLabels = Object.keys(incomeByCategory);
-      const incomeData = Object.values(incomeByCategory);
-
-      // Clear previous charts if exist
-      if (expenseChart) expenseChart.destroy();
-      if (incomeChart) incomeChart.destroy();
-
-      // Create expense category chart
-      const ctxExpense = document.getElementById("expenseChartCanvas").getContext("2d");
-      expenseChart = new Chart(ctxExpense, {
-        type: "doughnut",
-        data: {
-          labels: expenseLabels,
-          datasets: [
-            {
-              label: "Expenses",
-              data: expenseData,
-              backgroundColor: [
-                "#f87171",
-                "#fbbf24",
-                "#34d399",
-                "#60a5fa",
-                "#a78bfa",
-                "#f472b6",
-              ],
-              borderColor: "#fff",
-              borderWidth: 3,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "70%",
-          plugins: {
-            legend: { position: "bottom", labels: { padding: 20, boxWidth: 22, font: { size: 15, weight: "700" } } },
-            title: {
-              display: true,
-              text: "Expenses by Category",
-              font: { size: 20, weight: "800" },
-              padding: { bottom: 25 }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  let label = context.label || '';
-                  let value = context.parsed || 0;
-                  return label + ': ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-                }
-              }
-            }
-          },
-          animation: {
-            animateRotate: true,
-            animateScale: true
-          }
-        },
-      });
-
-      // Create income category chart
-      const ctxIncome = document.getElementById("incomeChartCanvas").getContext("2d");
-      incomeChart = new Chart(ctxIncome, {
-        type: "doughnut",
-        data: {
-          labels: incomeLabels,
-          datasets: [
-            {
-              label: "Income",
-              data: incomeData,
-              backgroundColor: [
-                "#34d399",
-                "#60a5fa",
-                "#a78bfa",
-                "#fbbf24",
-                "#f87171",
-                "#f472b6",
-              ],
-              borderColor: "#fff",
-              borderWidth: 3,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "70%",
-          plugins: {
-            legend: { position: "bottom", labels: { padding: 20, boxWidth: 22, font: { size: 15, weight: "700" } } },
-            title: {
-              display: true,
-              text: "Income by Category",
-              font: { size: 20, weight: "800" },
-              padding: { bottom: 25 }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  let label = context.label || '';
-                  let value = context.parsed || 0;
-                  return label + ': ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-                }
-              }
-            }
-          },
-          animation: {
-            animateRotate: true,
-            animateScale: true
-          }
-        },
-      });
-
-      updateIncomeOutcomeChart();
-    }
-
-    // Update dashboard income, outcome, recent transactions
-    function updateDashboard() {
-      let totalIncome = 0;
-      let totalOutcome = 0;
-
-      // Calculate totals
-      for (const t of transactions) {
-        if (t.type === "income") totalIncome += t.amount;
-        else totalOutcome += t.amount;
-      }
-
-      dashboardIncomeEl.textContent = formatRupiah(totalIncome);
-      dashboardOutcomeEl.textContent = formatRupiah(totalOutcome);
-
-      // Update recent transactions list (show latest 7)
-      dashboardTransactionList.innerHTML = "";
-      const sorted = [...transactions].sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
-      const recent = sorted.slice(0, 7);
-      for (const t of recent) {
-        const li = document.createElement("li");
-        li.className = "py-2 flex justify-between items-center";
-        li.innerHTML = `
-          <div>
-            <div class="font-semibold text-sm text-[#1a2a1a]">${t.category}</div>
-            <div class="text-[10px] text-gray-500">${t.date}</div>
-          </div>
-          <div class="${
-            t.type === "income" ? "text-green-600" : "text-red-600"
-          } font-semibold">${formatRupiah(t.amount)}</div>
-        `;
-        dashboardTransactionList.appendChild(li);
-      }
-    }
-
-    // Prepare data for income/outcome over time chart
-    function prepareIncomeOutcomeData(range) {
-      // range: "month" or "year"
-      // Group transactions by month or year
-      const grouped = {};
+      const monthlyIncome = {};
+      const monthlyExpense = {};
 
       transactions.forEach(t => {
-        const dateObj = new Date(t.date);
-        let key;
-        if (range === "month") {
-          // Format: YYYY-MM
-          const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
-          key = `${dateObj.getFullYear()}-${month}`;
+        const month = new Date(t.date).toLocaleString('en-us', { month: 'short', year: 'numeric' });
+
+        if (t.type === 'income') {
+          incomeByCategory[t.category] = (incomeByCategory[t.category] || 0) + t.amount;
+          monthlyIncome[month] = (monthlyIncome[month] || 0) + t.amount;
         } else {
-          // Year only
-          key = `${dateObj.getFullYear()}`;
-        }
-        if (!grouped[key]) {
-          grouped[key] = { income: 0, expense: 0 };
-        }
-        if (t.type === "income") {
-          grouped[key].income += t.amount;
-        } else {
-          grouped[key].expense += t.amount;
+          expenseByCategory[t.category] = (expenseByCategory[t.category] || 0) + t.amount;
+          monthlyExpense[month] = (monthlyExpense[month] || 0) + t.amount;
         }
       });
 
-      // Sort keys ascending
-      const keys = Object.keys(grouped).sort();
+      // Sort months chronologically
+      const sortedMonths = Object.keys({ ...monthlyIncome, ...monthlyExpense }).sort((a, b) => {
+        const dateA = new Date(a);
+        const dateB = new Date(b);
+        return dateA - dateB;
+      });
 
-      // Prepare labels and datasets
-      const labels = keys;
-      const incomeData = keys.map(k => grouped[k].income);
-      const expenseData = keys.map(k => grouped[k].expense);
+      // Category Chart (Doughnut)
+      const categoryLabels = Object.keys(expenseByCategory);
+      const categoryData = Object.values(expenseByCategory);
 
-      return { labels, incomeData, expenseData };
-    }
-
-    // Update income/outcome over time chart
-    function updateIncomeOutcomeChart() {
-      const range = timeRangeSelect.value;
-      const { labels, incomeData, expenseData } = prepareIncomeOutcomeData(range);
-
-      if (incomeOutcomeChart) incomeOutcomeChart.destroy();
-
-      incomeOutcomeChart = new Chart(incomeOutcomeChartCanvas.getContext("2d"), {
-        type: "line",
+      if (categoryChart) categoryChart.destroy();
+      categoryChart = new Chart(categoryChartCtx, {
+        type: 'doughnut',
         data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Income",
-              data: incomeData,
-              borderColor: "#34d399",
-              backgroundColor: "rgba(52, 211, 153, 0.3)",
-              fill: true,
-              tension: 0.3,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              borderWidth: 3,
+          labels: categoryLabels,
+          datasets: [{
+            data: categoryData,
+            backgroundColor: [
+              '#FF6384',
+              '#36A2EB',
+              '#FFCE56',
+              '#4BC0C0',
+              '#9966FF',
+              '#FF9900',
+            ],
+            hoverBackgroundColor: [
+              '#FF6384',
+              '#36A2EB',
+              '#FFCE56',
+              '#4BC0C0',
+              '#9966FF',
+              '#FF9900',
+            ],
+          }, ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
             },
-            {
-              label: "Outcome",
-              data: expenseData,
-              borderColor: "#f87171",
-              backgroundColor: "rgba(248, 113, 113, 0.3)",
-              fill: true,
-              tension: 0.3,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              borderWidth: 3,
-            },
+          },
+        },
+      });
+
+      // Monthly Chart (Line)
+      const incomeData = sortedMonths.map(month => monthlyIncome[month] || 0);
+      const expenseData = sortedMonths.map(month => monthlyExpense[month] || 0);
+      const netBalanceData = sortedMonths.map(month => (monthlyIncome[month] || 0) - (monthlyExpense[month] || 0));
+
+      if (monthlyChart) monthlyChart.destroy();
+      monthlyChart = new Chart(monthlyChartCtx, {
+        type: 'line',
+        data: {
+          labels: sortedMonths,
+          datasets: [{
+            label: 'Income',
+            data: incomeData,
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Expense',
+            data: expenseData,
+            borderColor: '#F44336',
+            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
+          {
+            label: 'Net Balance',
+            data: netBalanceData,
+            borderColor: '#2196F3',
+            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+            fill: true,
+            tension: 0.3,
+          },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          interaction: {
-            mode: 'nearest',
-            intersect: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return formatRupiah(value);
+                },
+              },
+            },
           },
           plugins: {
-            legend: {
-              position: "top",
-              labels: {
-                font: { size: 14, weight: "600" },
-                padding: 20,
-              }
-            },
-            title: {
-              display: false,
-            },
             tooltip: {
               callbacks: {
                 label: function(context) {
-                  return context.dataset.label + ': ' + new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(context.parsed.y);
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: range === "month" ? "Month (YYYY-MM)" : "Year (YYYY)",
-                font: { size: 14, weight: "600" }
+                  return `${context.dataset.label}: ${formatRupiah(context.raw)}`;
+                },
               },
-              ticks: {
-                maxRotation: 45,
-                minRotation: 45,
-                maxTicksLimit: 12,
-                font: { size: 12 }
-              },
-              grid: {
-                display: false,
-              }
             },
-            y: {
-              title: {
-                display: true,
-                text: "Amount (Rp)",
-                font: { size: 14, weight: "600" }
-              },
-              ticks: {
-                font: { size: 12 },
-                callback: function(value) {
-                  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-                }
-              },
-              grid: {
-                color: "#e0e0e0",
-                borderDash: [5, 5],
-              },
-              beginAtZero: true,
-            }
-          }
-        }
+          },
+        },
+      });
+
+      // Calculate total savings and burn rate
+      const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+      const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+      const totalSavings = totalIncome - totalExpense;
+
+      totalSavingsEl.textContent = formatRupiah(totalSavings);
+
+      // Simple burn rate: total expense / number of months with transactions
+      const monthsWithTransactions = new Set(transactions.map(t => new Date(t.date).toLocaleString('en-us', { month: 'short', year: 'numeric' }))).size;
+      const burnRate = monthsWithTransactions > 0 ? totalExpense / monthsWithTransactions : 0;
+      burnRateEl.textContent = `${formatRupiah(burnRate)}/month`;
+    }
+
+    // Load initial data
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTransactions();
+      showSection('sectionDashboard'); // Default view
+    });
+
+    // Articles (example data and rendering)
+    const articles = [
+      {
+        title: "Understanding Cash Flow for UMKM",
+        summary: "Learn how to effectively manage your cash flow to ensure business stability and growth.",
+        link: "#",
+      },
+      {
+        title: "Importance of Financial Statements",
+        summary: "Discover why accurate financial statements are crucial for decision-making and investment.",
+        link: "#",
+      },
+      {
+        title: "Tax Tips for Small Businesses",
+        summary: "Navigate the complexities of taxation with these essential tips for UMKM owners.",
+        link: "#",
+      },
+      {
+        title: "Marketing on a Budget for UMKM",
+        summary: "Effective marketing strategies that won't break the bank for your small business.",
+        link: "#",
+      },
+    ];
+
+    const articlesList = document.getElementById('articlesList');
+
+    function renderArticles() {
+      articlesList.innerHTML = '';
+      articles.forEach(article => {
+        const articleCard = document.createElement('div');
+        articleCard.className = 'bg-white rounded-lg p-6 shadow-md border-2 border-[#4a5a4a]';
+        articleCard.innerHTML = `
+          <h3 class="text-lg font-semibold text-[#1a2a1a] mb-2">${article.title}</h3>
+          <p class="text-sm text-gray-600 mb-4">${article.summary}</p>
+          <a href="${article.link}" class="text-[#1a2a1a] font-semibold hover:underline text-sm">Read More &rarr;</a>
+        `;
+        articlesList.appendChild(articleCard);
       });
     }
 
-    // Update dashboard income, outcome, recent transactions
-    function updateDashboard() {
-      let totalIncome = 0;
-      let totalOutcome = 0;
-
-      // Calculate totals
-      for (const t of transactions) {
-        if (t.type === "income") totalIncome += t.amount;
-        else totalOutcome += t.amount;
-      }
-
-      dashboardIncomeEl.textContent = formatRupiah(totalIncome);
-      dashboardOutcomeEl.textContent = formatRupiah(totalOutcome);
-
-      // Update recent transactions list (show latest 7)
-      dashboardTransactionList.innerHTML = "";
-      const sorted = [...transactions].sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
-      const recent = sorted.slice(0, 7);
-      for (const t of recent) {
-        const li = document.createElement("li");
-        li.className = "py-2 flex justify-between items-center";
-        li.innerHTML = `
-          <div>
-            <div class="font-semibold text-sm text-[#1a2a1a]">${t.category}</div>
-            <div class="text-[10px] text-gray-500">${t.date}</div>
-          </div>
-          <div class="${
-            t.type === "income" ? "text-green-600" : "text-red-600"
-          } font-semibold">${formatRupiah(t.amount)}</div>
-        `;
-        dashboardTransactionList.appendChild(li);
-      }
-    }
+    document.getElementById('navArticles').addEventListener('click', renderArticles);
 
     // On window resize, reset sidebar and overlay for desktop and adjust content width
-    function handleResize() {
+    window.addEventListener('resize', function() {
       if (window.innerWidth >= 768) {
-        sidebar.classList.remove("-translate-x-full");
-        overlay.classList.add("hidden");
-        contentWrapper.classList.add("sidebar-open");
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.add('hidden');
+        contentWrapper.classList.add('sidebar-open');
       } else {
-        sidebar.classList.add("-translate-x-full");
-        overlay.classList.add("hidden");
-        contentWrapper.classList.remove("sidebar-open");
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        contentWrapper.classList.remove('sidebar-open');
       }
-    }
-
-    window.addEventListener("resize", () => {
-      handleResize();
-      if (expenseChart) expenseChart.resize();
-      if (incomeChart) incomeChart.resize();
-      if (incomeOutcomeChart) incomeOutcomeChart.resize();
     });
-
-    // Initialize sidebar state on load
-    handleResize();
-
-    // Initialize dashboard with empty data
-    updateDashboard();
-
-    // Update statistics and charts on data change
-    function updateAll() {
-      updateReportTable();
-      updateStatistics();
-      updateDashboard();
-      updateIncomeOutcomeChart();
-    }
-
-    // Override updateStatistics to call updateIncomeOutcomeChart as well
-    transactionForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const type = transactionForm.type.value;
-      const category = transactionForm.category.value;
-      const amount = parseFloat(transactionForm.amount.value);
-      const date = transactionForm.date.value;
-
-      if (!category || !date || isNaN(amount) || amount <= 0) {
-        alert("Please fill all fields correctly.");
-        return;
-      }
-
-      transactions.push({ type, category, amount, date });
-      transactionForm.reset();
-      updateAll();
-    });
-
-    // Also update incomeOutcomeChart when timeRange changes
-    timeRangeSelect.addEventListener("change", () => {
-      updateIncomeOutcomeChart();
-    });
-
   </script>
  </body>
 </html>
