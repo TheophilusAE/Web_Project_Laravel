@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -88,5 +89,42 @@ class SettingsController extends Controller
 
         return redirect()->route('settings.index')
             ->with('success', 'Security settings updated successfully.');
+    }
+
+    public function updateProfilePicture(Request $request)
+    {
+        $request->validate([
+            'new_profile_picture' => ['required', 'image', 'max:2048'], // Max 2MB
+        ]);
+
+        $user = Auth::user();
+
+        // Delete old profile picture if exists
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        // Store new profile picture
+        $path = $request->file('new_profile_picture')->store('profile-pictures', 'public');
+
+        $user->profile_picture = $path;
+        $user->save();
+
+        return redirect()->route('settings.index')
+            ->with('success', 'Profile picture updated successfully.');
+    }
+
+    public function deleteProfilePicture()
+    {
+        $user = Auth::user();
+
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+            $user->profile_picture = null;
+            $user->save();
+        }
+
+        return redirect()->route('settings.index')
+            ->with('success', 'Profile picture deleted successfully.');
     }
 } 

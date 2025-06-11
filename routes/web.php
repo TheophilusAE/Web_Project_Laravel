@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 // Welcome page
@@ -46,10 +47,13 @@ Route::middleware(['auth', 'role:UMKM Owner'])->group(function () {
     Route::get('/categories/type/{type}', [CategoryController::class, 'getByType'])->name('categories.by-type');
 });
 
-// Admin Routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('articles', AdminArticleController::class);
+Route::middleware(['auth', 'role:UMKM Owner'])->prefix('transactions')->name('transactions.')->group(function () {
+    Route::get('/', [TransactionController::class, 'index'])->name('index');
+    Route::get('/create', [TransactionController::class, 'create'])->name('create');
+    Route::post('/', [TransactionController::class, 'store'])->name('store');
+    Route::get('/{transaction}/edit', [TransactionController::class, 'edit'])->name('edit');
+    Route::put('/{transaction}', [TransactionController::class, 'update'])->name('update');
+    Route::delete('/{transaction}', [TransactionController::class, 'destroy'])->name('destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -72,4 +76,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.updatePassword');
     Route::put('/settings/preferences', [SettingsController::class, 'updatePreferences'])->name('settings.updatePreferences');
     Route::put('/settings/security', [SettingsController::class, 'updateSecurity'])->name('settings.updateSecurity');
+    Route::put('/settings/profile-picture', [SettingsController::class, 'updateProfilePicture'])->name('settings.updateProfilePicture');
+    Route::delete('/settings/profile-picture', [SettingsController::class, 'deleteProfilePicture'])->name('settings.deleteProfilePicture');
 });

@@ -20,9 +20,7 @@ class LoginController extends Controller
 
             $user = Auth::user();
 
-            if ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->isOwner()) {
+            if ($user->isOwner()) {
                 return redirect()->route('dashboard');
             }
             

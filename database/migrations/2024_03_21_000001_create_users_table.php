@@ -12,8 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'UMKM Owner']);
+            $table->enum('role', ['UMKM Owner']);
             $table->string('business_name')->nullable(); // For UMKM owners
             $table->string('phone_number')->nullable();
             $table->rememberToken();

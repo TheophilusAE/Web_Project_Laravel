@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
@@ -22,15 +23,21 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:admin,UMKM Owner'],
+            'role' => ['required', 'in:UMKM Owner'],
             'business_name' => ['required_if:role,UMKM Owner', 'string', 'max:255'],
             'phone_number' => ['required', 'string', 'max:20'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
+        }
+
+        $profilePicturePath = null;
+        if ($request->hasFile('profile_picture')) {
+            $profilePicturePath = $request->file('profile_picture')->store('profile-pictures', 'public');
         }
 
         $user = User::create([
@@ -40,6 +47,7 @@ class RegisterController extends Controller
             'role' => $request->role,
             'business_name' => $request->business_name,
             'phone_number' => $request->phone_number,
+            'profile_picture' => $profilePicturePath,
         ]);
 
         return redirect()->route('login')->with('success', 'Registration successful! Please log in.');

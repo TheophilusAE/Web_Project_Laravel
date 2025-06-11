@@ -112,11 +112,7 @@
                     <div>
                         <h2 class="text-2xl font-semibold gradient-text">Finapp</h2>
                         <p class="text-indigo-200 dark:text-gray-300">
-                            @if(auth()->user()->isAdmin())
-                                Admin Panel
-                            @else
-                                {{ auth()->user()->business_name }}
-                            @endif
+                            {{ auth()->user()->business_name }}
                         </p>
                     </div>
                 </div>
@@ -125,36 +121,29 @@
             <!-- Sidebar Navigation -->
             <nav class="h-[calc(100%-5rem)] overflow-y-auto flex flex-col justify-between">
                 <div>
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                            Dashboard
-                        </a>
-                        <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                            Manage Articles
-                        </a>
-                    @else
-                        <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                            Dashboard
-                        </a>
-                        <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                            <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
-                            Reports
-                        </a>
-                        <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
-                            <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                            Analysis
-                        </a>
-                        <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                            Articles
-                        </a>
-                    @endif
+                    <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
+                        Reports
+                    </a>
+                    <a href="{{ route('transactions.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                        <i class="fas fa-exchange-alt w-5 h-5 mr-3"></i>
+                        Transactions
+                    </a>
+                    <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
+                        <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
+                        Analysis
+                    </a>
+                    <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                        <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                        Articles
+                    </a>
                 </div>
-                <div class="pb-4"> <!-- Added padding for bottom links -->
-                    <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <div class="pb-4">
+                    <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                         <i class="fas fa-cog w-5 h-5 mr-3"></i>
                         Settings
                     </a>
@@ -182,11 +171,7 @@
                         <div>
                             <h2 class="text-2xl font-semibold gradient-text">Finapp</h2>
                             <p class="text-indigo-200 dark:text-gray-300">
-                                @if(auth()->user()->isAdmin())
-                                    Admin Panel
-                                @else
-                                    {{ auth()->user()->business_name }}
-                                @endif
+                                {{ auth()->user()->business_name }}
                             </p>
                         </div>
                     </div>
@@ -198,36 +183,29 @@
                 <!-- Mobile menu navigation -->
                 <nav class="flex-1 overflow-y-auto flex flex-col justify-between">
                     <div>
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                                <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                                Dashboard
-                            </a>
-                            <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                                <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                                Manage Articles
-                            </a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                                <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                                Dashboard
-                            </a>
-                            <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                                <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
-                                Reports
-                            </a>
-                            <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
-                                <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                                Analysis
-                            </a>
-                            <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                                <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                                Articles
-                            </a>
-                        @endif
+                        <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
+                            Reports
+                        </a>
+                        <a href="{{ route('transactions.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                            <i class="fas fa-exchange-alt w-5 h-5 mr-3"></i>
+                            Transactions
+                        </a>
+                        <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
+                            <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
+                            Analysis
+                        </a>
+                        <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                            Articles
+                        </a>
                     </div>
-                    <div class="pb-4"> <!-- Added padding for bottom links -->
-                        <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                    <div class="pb-4">
+                        <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-8 py-5 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                             <i class="fas fa-cog w-5 h-5 mr-3"></i>
                             Settings
                         </a>
@@ -249,7 +227,8 @@
                             <!-- Profile Dropdown -->
                             <div class="relative" x-data="{ open: false }" @click.away="open = false">
                                 <button @click="open = !open" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none">
-                                    <i class="fas fa-user mr-2"></i> Profile
+                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url ?? asset('images/default_profile.png') }}" alt="{{ Auth::user()->name }}" />
+                                    <span class="ml-2 hidden md:block">{{ Auth::user()->name }}</span>
                                     <i class="fas fa-chevron-down ml-2 text-xs"></i>
                                 </button>
 

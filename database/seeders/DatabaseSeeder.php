@@ -18,15 +18,6 @@ class DatabaseSeeder extends Seeder
             ArticleSeeder::class,
         ]);
 
-        // Create admin user
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@finopro.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-            'phone_number' => '081234567890',
-        ]);
-
         // Create sample UMKM owner
         User::create([
             'name' => 'UMKM Owner',

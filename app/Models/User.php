@@ -52,11 +52,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
     public function isOwner()
     {
         return $this->role === 'UMKM Owner';

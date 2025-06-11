@@ -119,6 +119,49 @@
                     </div>
                 </form>
 
+                <!-- Profile Picture Settings -->
+                <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Profile Picture</h3>
+                    <form action="{{ route('settings.updateProfilePicture') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="flex items-center space-x-4">
+                            <img class="h-24 w-24 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url ?? asset('images/default_profile.png') }}" alt="{{ Auth::user()->name }}" />
+                            <div>
+                                <label for="new_profile_picture" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload New Picture</label>
+                                <input type="file" name="new_profile_picture" id="new_profile_picture" class="block w-full text-sm text-gray-900 dark:text-gray-200
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800
+                                    cursor-pointer">
+                                @error('new_profile_picture')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            @if(Auth::user()->profile_picture)
+                                <button type="submit" form="delete-profile-picture-form" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                    Delete Picture
+                                </button>
+                            @endif
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                Update Profile Picture
+                            </button>
+                        </div>
+                    </form>
+                    @if(Auth::user()->profile_picture)
+                        <form id="delete-profile-picture-form" action="{{ route('settings.deleteProfilePicture') }}" method="POST" style="display: none;">
+                            @csrf
+                            @method('DELETE')
+                        </form>
+                    @endif
+                </div>
+
                 <!-- Change Password Form -->
                 <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Change Password</h3>

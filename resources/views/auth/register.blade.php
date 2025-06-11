@@ -33,7 +33,7 @@
                 </div>
             @endif
 
-            <form class="space-y-6" action="{{ route('register') }}" method="POST">
+            <form class="space-y-6" action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="space-y-4">
                     <div>
@@ -53,7 +53,6 @@
                         <select id="role" name="role" required
                                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                             <option value="">Select your role</option>
-                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="UMKM Owner" {{ old('role') == 'UMKM Owner' ? 'selected' : '' }}>UMKM Owner</option>
                         </select>
                     </div>
@@ -62,6 +61,10 @@
                         <input id="phone_number" name="phone_number" type="text" autocomplete="tel" required
                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                                placeholder="Phone Number" value="{{ old('phone_number') }}">
+                    </div>
+                    <div>
+                        <label for="profile_picture" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Profile Picture</label>
+                        <input id="profile_picture" name="profile_picture" type="file" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
                     <div id="business_name_field" style="display: {{ old('role') == 'UMKM Owner' ? 'block' : 'none' }};">
                         <label for="business_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Business Name</label>
