@@ -14,6 +14,7 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PasswordResetController;
 
 // Welcome page
 Route::get('/', function () { return view('welcome'); });
@@ -79,3 +80,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/profile-picture', [SettingsController::class, 'updateProfilePicture'])->name('settings.updateProfilePicture');
     Route::delete('/settings/profile-picture', [SettingsController::class, 'deleteProfilePicture'])->name('settings.deleteProfilePicture');
 });
+
+// Password Reset Routes
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])
+    ->name('password.request');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPasswordForm'])
+    ->name('password.reset');

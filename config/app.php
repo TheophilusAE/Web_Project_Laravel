@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        // Inertia\ServiceProvider::class,
 
         /*
          * Application Service Providers...
