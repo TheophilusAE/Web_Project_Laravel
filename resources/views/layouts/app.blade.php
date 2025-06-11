@@ -108,7 +108,7 @@
             <!-- Sidebar Header -->
             <div class="flex items-center justify-between p-4 border-b border-indigo-600 dark:border-gray-700">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('images/logo.svg') }}" alt="Finapp Logo" class="h-8 w-8">
+                    <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-16 w-16">
                     <div>
                         <h2 class="text-2xl font-semibold gradient-text">Finapp</h2>
                         <p class="text-indigo-200 dark:text-gray-300">
@@ -167,7 +167,7 @@
                 <!-- Mobile menu header -->
                 <div class="flex items-center justify-between p-4 border-b border-indigo-600 dark:border-gray-700">
                     <div class="flex items-center space-x-3">
-                        <img src="{{ asset('images/logo.svg') }}" alt="Finapp Logo" class="h-8 w-8">
+                        <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-16 w-16">
                         <div>
                             <h2 class="text-2xl font-semibold gradient-text">Finapp</h2>
                             <p class="text-indigo-200 dark:text-gray-300">

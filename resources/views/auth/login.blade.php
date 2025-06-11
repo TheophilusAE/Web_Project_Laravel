@@ -7,7 +7,7 @@
     <div class="max-w-md w-full">
         <div class="glass-effect rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8" data-aos="fade-up">
             <div class="flex flex-col items-center mb-6">
-                <img class="h-12 w-auto mb-2" src="/images/logo.svg" alt="Finapp Logo">
+                <img class="h-20 w-auto mb-2" src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Finapp

@@ -114,8 +114,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-20">
                     <div class="flex items-center space-x-3">
-                        <img src="/images/logo.svg" alt="Finapp Logo" class="h-12 w-auto dark:hidden">
-                        <img src="/images/logo-white.svg" alt="Finapp Logo" class="h-12 w-auto hidden dark:block">
+                        <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-20 w-auto">
                         <h1 class="text-2xl font-bold gradient-text">Finapp</h1>
                     </div>
                     <div class="flex items-center space-x-6">
@@ -333,7 +332,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
                         <div class="flex items-center space-x-3 mb-4">
-                            <img src="/images/logo-white.svg" alt="Finapp Logo" class="h-8 w-auto">
+                            <img src="{{ asset('images/logoF-Photoroom.png') }}" alt="Finapp Logo" class="h-16 w-auto">
                             <h3 class="text-xl font-bold">Finapp</h3>
                         </div>
                         <p class="text-gray-400">Smart financial planning for UMKM owners.</p>
