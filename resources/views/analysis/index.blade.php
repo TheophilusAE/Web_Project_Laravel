@@ -267,13 +267,10 @@ function initializeCharts() {
         const categoryChart = new Chart(categoryCtx, {
             type: 'doughnut',
             data: {
-                labels: categoryData.map(item => item.category),
+                labels: categoryData.map(item => item.category_name),
                 datasets: [{
-                    data: categoryData.map(item => item.amount),
-                    backgroundColor: [
-                        '#4F46E5', '#7C3AED', '#EC4899', '#F59E0B',
-                        '#10B981', '#3B82F6', '#8B5CF6', '#EF4444',
-                    ],
+                    data: categoryData.map(item => item.total),
+                    backgroundColor: categoryData.map(item => item.color),
                     borderWidth: 2,
                     borderColor: isDarkMode ? '#1F2937' : '#FFFFFF',
                 }]
@@ -288,6 +285,14 @@ function initializeCharts() {
                             color: textColor,
                             boxWidth: 15,
                             padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                return `${context.label}: Rp ${value.toLocaleString('id-ID')}`;
+                            }
                         }
                     }
                 }
