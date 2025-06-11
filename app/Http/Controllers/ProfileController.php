@@ -9,6 +9,12 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
+    public function show()
+    {
+        $user = Auth::user();
+        return view('profile.show', compact('user'));
+    }
+
     public function edit()
     {
         return view('profile.edit');

@@ -283,7 +283,6 @@
 
         // Dark mode toggle
         const themeToggle = document.getElementById('theme-toggle');
-        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
         const html = document.documentElement;
 
         function toggleTheme() {
@@ -304,11 +303,8 @@
             toggleTheme();
             applyThemeDependentStyles(); // Call after theme toggle
         });
-        themeToggleMobile.addEventListener('click', () => {
-            toggleTheme();
-            applyThemeDependentStyles(); // Call after theme toggle
-        });
 
+        // Mobile menu toggle function
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
