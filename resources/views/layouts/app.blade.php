@@ -123,47 +123,41 @@
             </div>
 
             <!-- Sidebar Navigation -->
-            <nav class="h-[calc(100%-5rem)] overflow-y-auto flex flex-col">
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                        Dashboard
+            <nav class="h-[calc(100%-5rem)] overflow-y-auto flex flex-col justify-between">
+                <div>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                            Manage Articles
+                        </a>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
+                            Reports
+                        </a>
+                        <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
+                            <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
+                            Analysis
+                        </a>
+                        <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                            Articles
+                        </a>
+                    @endif
+                </div>
+                <div class="pb-4"> <!-- Added padding for bottom links -->
+                    <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                        <i class="fas fa-cog w-5 h-5 mr-3"></i>
+                        Settings
                     </a>
-                    <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                        <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                        Manage Articles
-                    </a>
-                @else
-                    <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                        Dashboard
-                    </a>
-                    <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
-                        Reports
-                    </a>
-                    <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
-                        <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                        Analysis
-                    </a>
-                    <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                        <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                        Articles
-                    </a>
-                @endif
-                <!-- Profile and Logout Menu -->
-                <div class="mt-auto border-t border-indigo-600 dark:border-gray-700">
-                    <a href="{{ route('profile.edit') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
-                        <i class="fas fa-user w-5 h-5 mr-3"></i>
-                        Profile
-                    </a>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="nav-link flex items-center w-full px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
-                            <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                            Logout
-                        </button>
-                    </form>
                 </div>
             </nav>
         </aside>
@@ -202,46 +196,41 @@
                 </div>
 
                 <!-- Mobile menu navigation -->
-                <nav class="flex-1 overflow-y-auto">
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                            Dashboard
+                <nav class="flex-1 overflow-y-auto flex flex-col justify-between">
+                    <div>
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                                <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                                Dashboard
+                            </a>
+                            <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                                <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                                Manage Articles
+                            </a>
+                        @else
+                            <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                                <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
+                                Dashboard
+                            </a>
+                            <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                                <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
+                                Reports
+                            </a>
+                            <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
+                                <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
+                                Analysis
+                            </a>
+                            <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                                <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
+                                Articles
+                            </a>
+                        @endif
+                    </div>
+                    <div class="pb-4"> <!-- Added padding for bottom links -->
+                        <a href="{{ route('settings.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                            <i class="fas fa-cog w-5 h-5 mr-3"></i>
+                            Settings
                         </a>
-                        <a href="{{ route('admin.articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                            Manage Articles
-                        </a>
-                    @else
-                        <a href="{{ route('dashboard') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line w-5 h-5 mr-3"></i>
-                            Dashboard
-                        </a>
-                        <a href="{{ route('reports.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                            <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
-                            Reports
-                        </a>
-                        <a href="{{ route('analysis.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('analysis.*') ? 'active' : '' }}">
-                            <i class="fas fa-chart-bar w-5 h-5 mr-3"></i>
-                            Analysis
-                        </a>
-                        <a href="{{ route('articles.index') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700 {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                            <i class="fas fa-newspaper w-5 h-5 mr-3"></i>
-                            Articles
-                        </a>
-                    @endif
-                    <div class="mt-auto border-t border-indigo-600 dark:border-gray-700">
-                        <a href="{{ route('profile.edit') }}" class="nav-link flex items-center px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
-                            <i class="fas fa-user w-5 h-5 mr-3"></i>
-                            Profile
-                        </a>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="nav-link flex items-center w-full px-4 py-3 text-white hover:bg-indigo-600 dark:hover:bg-gray-700">
-                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3"></i>
-                                Logout
-                            </button>
-                        </form>
                     </div>
                 </nav>
             </div>
@@ -252,16 +241,31 @@
             <!-- Top Navigation -->
             <nav class="bg-white dark:bg-gray-800 shadow-lg flex-shrink-0 transition-colors duration-300">
                 <div class="px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
+                    <div class="flex justify-between h-16 items-center"> <!-- Added items-center for vertical alignment -->
                         <div class="flex items-center">
                             <h1 class="text-xl font-semibold text-gray-800 dark:text-white">@yield('header', 'Dashboard')</h1>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-4">
-                                <a href="{{ route('settings.index') }}" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
-                                    <i class="fas fa-cog mr-2"></i> Settings
-                                </a>
+                            <!-- Profile Dropdown -->
+                            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                                <button @click="open = !open" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors focus:outline-none">
+                                    <i class="fas fa-user mr-2"></i> Profile
+                                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                </button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        <i class="fas fa-user mr-2"></i> Profile
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
