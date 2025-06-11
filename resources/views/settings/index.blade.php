@@ -27,6 +27,9 @@
                     <button class="settings-tab px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-b-2 border-transparent" data-tab="notifications">
                         Notifications
                     </button>
+                    <button class="settings-tab px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 border-b-2 border-transparent" data-tab="categories">
+                        Categories
+                    </button>
                 </nav>
             </div>
 
@@ -288,6 +291,73 @@
                         </button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Categories Settings -->
+            <div class="settings-content hidden p-6" id="categories">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Manage Transaction Categories</h3>
+                    <a href="{{ route('categories.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Manage Categories
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Income Categories -->
+                        <div>
+                            <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">Income Categories</h4>
+                            <div class="space-y-2">
+                                @forelse($user->categories()->where('type', 'income')->get() as $category)
+                                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: {{ $category->color }}">
+                                                <i class="{{ $category->icon }} text-white"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $category->name }}</span>
+                                            @if($category->is_default)
+                                                <span class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 dark:bg-blue-900 dark:text-blue-200 rounded-full">Default</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @empty
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">No income categories found. Add one from the "Manage Categories" page.</p>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <!-- Expense Categories -->
+                        <div>
+                            <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">Expense Categories</h4>
+                            <div class="space-y-2">
+                                @forelse($user->categories()->where('type', 'expense')->get() as $category)
+                                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background-color: {{ $category->color }}">
+                                                <i class="{{ $category->icon }} text-white"></i>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $category->name }}</span>
+                                            @if($category->is_default)
+                                                <span class="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 dark:bg-blue-900 dark:text-blue-200 rounded-full">Default</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @empty
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">No expense categories found. Add one from the "Manage Categories" page.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-sm text-gray-500 dark:text-gray-400">
+                        <p>• Click "Manage Categories" to add, edit, or delete categories</p>
+                        <p>• Default categories cannot be modified or deleted</p>
+                        <p>• Categories with existing transactions cannot be deleted</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

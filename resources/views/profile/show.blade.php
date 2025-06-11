@@ -9,9 +9,21 @@
             <!-- Profile Header -->
             <div class="relative h-40 bg-gradient-to-r from-blue-500 to-indigo-600">
                 <div class="absolute -bottom-16 left-8">
-                    <div class="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 bg-white dark:bg-gray-800 flex items-center justify-center">
-                        <i class="fas fa-user text-5xl text-gray-400"></i>
+                    <div class="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                        @if ($user->profile_picture_url)
+                            <img src="{{ $user->profile_picture_url }}" alt="Profile Picture" class="object-cover w-full h-full">
+                        @else
+                            <i class="fas fa-user text-5xl text-gray-400"></i>
+                        @endif
                     </div>
+                    <!-- Profile Picture Upload Form -->
+                    <form action="{{ route('profile.updateProfilePicture') }}" method="POST" enctype="multipart/form-data" class="absolute bottom-0 right-0 -mr-2 -mb-2">
+                        @csrf
+                        <label for="profile_picture_upload" class="cursor-pointer bg-blue-500 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" name="profile_picture" id="profile_picture_upload" class="hidden" onchange="this.form.submit();">
+                        </label>
+                    </form>
                 </div>
                 <div class="absolute bottom-4 right-8">
                     <span class="px-4 py-2 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded-full text-sm font-semibold">
@@ -22,6 +34,24 @@
 
             <!-- Profile Content -->
             <div class="pt-20 pb-8 px-8">
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Success!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <ul class="mt-1 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>

@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="h-80">
-                <canvas id="monthlyTrendsChart"></canvas>
+                <canvas id="monthlyTrendsChart" width="400" height="300"></canvas>
         </div>
     </div>
 
@@ -97,7 +97,7 @@
                 </select>
             </div>
             <div class="h-80">
-                <canvas id="categoryDistributionChart"></canvas>
+                <canvas id="categoryDistributionChart" width="400" height="300"></canvas>
         </div>
     </div>
 </div>
@@ -132,16 +132,18 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             {{ $transaction->transaction_date ? $transaction->transaction_date->format('d M Y') : '-' }}
                                 </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full 
-                                {{ $transaction->type === 'income' 
-                                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
-                                    : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' }}">
-                                {{ $transaction->category }}
-                                    </span>
-                                </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            @if($transaction->category)
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full" style="background-color: {{ $transaction->category->color }}"></span>
+                                    <span>{{ $transaction->category->name }}</span>
+                                </div>
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                            {{ Str::limit($transaction->description, 50) }}
+                            {{ $transaction->description ?? '-' }}
                                 </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium 
                             {{ $transaction->type === 'income' 
@@ -167,225 +169,200 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Wait for theme.js to load and initialize
-    function waitForThemeColors(callback) {
-        if (typeof themeColors !== 'undefined') {
-            callback();
-        } else {
-            setTimeout(() => waitForThemeColors(callback), 100);
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        let categoryDistributionChart = null;
+        let monthlyTrendsChart = null;
 
-    waitForThemeColors(function() {
-        document.addEventListener('DOMContentLoaded', function() {
-            // Monthly Trends Chart
-            const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
-            const monthlyTrendsChart = new Chart(monthlyTrendsCtx, {
+        // Add fallback colors
+        const fallbackColors = {
+            income: '#10B981',
+            expense: '#EF4444',
+            net: '#3B82F6',
+            text: '#1F2937',
+            grid: '#E5E7EB'
+        };
+
+        function getSafeColor(type) {
+            try {
+                const theme = getCurrentTheme();
+                return themeColors?.[theme]?.chart?.[type]?.[0] || fallbackColors[type];
+            } catch (e) {
+                return fallbackColors[type];
+            }
+        }
+
+        function validateChartData(data) {
+            if (!data || typeof data !== 'object') return [];
+            return Object.entries(data).map(([key, value]) => ({
+                month: key,
+                income: Number(value?.income || 0),
+                expense: Number(value?.expense || 0),
+                net: Number(value?.net || 0)
+            }));
+        }
+
+        function initializeMonthlyTrendsChart() {
+            if (monthlyTrendsChart) {
+                monthlyTrendsChart.destroy();
+            }
+
+            const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart');
+            if (!monthlyTrendsCtx) return;
+
+            const ctx = monthlyTrendsCtx.getContext('2d');
+            if (!ctx) return;
+
+            // Validate and process the data
+            const rawMonthlyTrends = @json($monthlyTrends ?? []);
+            const validatedData = validateChartData(rawMonthlyTrends);
+            
+            const monthlyLabels = validatedData.map(d => d.month);
+            const monthlyIncomeData = validatedData.map(d => d.income);
+            const monthlyExpenseData = validatedData.map(d => d.expense);
+            const monthlyNetData = validatedData.map(d => d.net);
+
+            // Ensure we have at least one data point
+            if (monthlyLabels.length === 0) {
+                monthlyLabels.push('No Data');
+                monthlyIncomeData.push(0);
+                monthlyExpenseData.push(0);
+                monthlyNetData.push(0);
+            }
+
+            const chartConfig = {
                 type: 'line',
                 data: {
-                    labels: {!! json_encode(array_keys($monthlyTrends)) !!},
+                    labels: monthlyLabels,
                     datasets: [
                         {
                             label: 'Income',
-                            data: {!! json_encode(array_column($monthlyTrends, 'income')) !!},
-                            borderColor: themeColors[getCurrentTheme()].chart.income[0],
-                            backgroundColor: themeColors[getCurrentTheme()].chart.income[0] + '20',
+                            data: monthlyIncomeData,
+                            borderColor: getSafeColor('income'),
+                            backgroundColor: getSafeColor('income') + '20',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         },
                         {
                             label: 'Expenses',
-                            data: {!! json_encode(array_column($monthlyTrends, 'expense')) !!},
-                            borderColor: themeColors[getCurrentTheme()].chart.expense[0],
-                            backgroundColor: themeColors[getCurrentTheme()].chart.expense[0] + '20',
+                            data: monthlyExpenseData,
+                            borderColor: getSafeColor('expense'),
+                            backgroundColor: getSafeColor('expense') + '20',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         },
                         {
-                            label: 'Net Balance',
-                            data: {!! json_encode(array_column($monthlyTrends, 'net')) !!},
-                            borderColor: themeColors[getCurrentTheme()].chart.accent[0],
-                            backgroundColor: themeColors[getCurrentTheme()].chart.accent[0] + '20',
+                            label: 'Net',
+                            data: monthlyNetData,
+                            borderColor: getSafeColor('net'),
+                            backgroundColor: getSafeColor('net') + '20',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: {
+                        duration: 750,
+                        easing: 'easeInOutQuart'
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     plugins: {
                         legend: {
                             position: 'top',
                             labels: {
-                                color: themeColors[getCurrentTheme()].text.primary,
+                                color: fallbackColors.text,
                                 usePointStyle: true,
                                 padding: 20
                             }
                         },
+                        title: {
+                            display: true,
+                            text: 'Monthly Trends',
+                            color: fallbackColors.text,
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        },
                         tooltip: {
+                            enabled: true,
                             mode: 'index',
                             intersect: false,
-                            backgroundColor: themeColors[getCurrentTheme()].tooltip.background,
-                            titleColor: themeColors[getCurrentTheme()].tooltip.text,
-                            bodyColor: themeColors[getCurrentTheme()].tooltip.text,
-                            borderColor: themeColors[getCurrentTheme()].tooltip.border,
-                            borderWidth: 1,
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('id-ID', {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0
-                                        }).format(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderWidth: 1
                         }
                     },
                     scales: {
                         x: {
                             grid: {
-                                color: themeColors[getCurrentTheme()].grid.primary,
-                                drawBorder: false
+                                display: true,
+                                color: fallbackColors.grid,
+                                drawBorder: true
                             },
                             ticks: {
-                                color: themeColors[getCurrentTheme()].text.secondary,
-                                maxRotation: 45,
-                                minRotation: 45
+                                color: fallbackColors.text,
+                                padding: 10
                             }
                         },
                         y: {
+                            beginAtZero: true,
                             grid: {
-                                color: themeColors[getCurrentTheme()].grid.primary,
-                                drawBorder: false
+                                display: true,
+                                color: fallbackColors.grid,
+                                drawBorder: true
                             },
                             ticks: {
-                                color: themeColors[getCurrentTheme()].text.secondary,
+                                color: fallbackColors.text,
+                                padding: 10,
                                 callback: function(value) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0,
-                                        notation: 'compact',
-                                        compactDisplay: 'short'
-                                    }).format(value);
+                                    return 'Rp ' + value.toLocaleString('id-ID');
                                 }
                             }
                         }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        axis: 'x',
-                        intersect: false
-                    },
-                    animation: {
-                        duration: 750,
-                        easing: 'easeInOutQuart'
                     }
                 }
-            });
-
-            // Category Distribution Chart
-            const categoryDistributionCtx = document.getElementById('categoryDistributionChart').getContext('2d');
-            const categoryDistributionChart = new Chart(categoryDistributionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: {!! json_encode(array_keys($categoryDistribution)) !!},
-                    datasets: [{
-                        data: {!! json_encode(array_values($categoryDistribution)) !!},
-                        backgroundColor: [
-                            themeColors[getCurrentTheme()].chart.accent[0],
-                            themeColors[getCurrentTheme()].chart.accent[1],
-                            themeColors[getCurrentTheme()].chart.accent[2],
-                            themeColors[getCurrentTheme()].chart.accent[3],
-                            themeColors[getCurrentTheme()].chart.accent[4]
-                        ],
-                        borderWidth: 2,
-                        borderColor: themeColors[getCurrentTheme()].background.primary
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                color: themeColors[getCurrentTheme()].text.primary,
-                                usePointStyle: true,
-                                padding: 20,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: themeColors[getCurrentTheme()].tooltip.background,
-                            titleColor: themeColors[getCurrentTheme()].tooltip.text,
-                            bodyColor: themeColors[getCurrentTheme()].tooltip.text,
-                            borderColor: themeColors[getCurrentTheme()].tooltip.border,
-                            borderWidth: 1,
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0
-                                    }).format(value)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '70%',
-                    animation: {
-                        duration: 750,
-                        easing: 'easeInOutQuart'
-                    }
-                }
-            });
-
-            // Store chart instances for theme updates
-            window.charts = {
-                monthlyTrends: monthlyTrendsChart,
-                categoryDistribution: categoryDistributionChart
             };
 
-            // Period selector functionality
-            const periodButtons = document.querySelectorAll('.card button');
-            periodButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    periodButtons.forEach(btn => {
-                        btn.classList.remove('bg-indigo-100', 'dark:bg-indigo-900', 'text-indigo-800', 'dark:text-indigo-200');
-                        btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
-                    });
-                    button.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800', 'dark:text-gray-200');
-                    button.classList.add('bg-indigo-100', 'dark:bg-indigo-900', 'text-indigo-800', 'dark:text-indigo-200');
-                    // Implement period change logic here
-                });
-            });
+            try {
+                monthlyTrendsChart = new Chart(ctx, chartConfig);
+            } catch (error) {
+                console.error('Error initializing monthly trends chart:', error);
+            }
+        }
 
-            // Category selector functionality
-            const categorySelect = document.querySelector('select');
-            categorySelect.addEventListener('change', (e) => {
-                // Implement category change logic here
-            });
+        // Initialize charts when DOM is loaded
+        try {
+            initializeMonthlyTrendsChart();
+        } catch (error) {
+            console.error('Error during chart initialization:', error);
+        }
+
+        // Update charts on theme change
+        document.addEventListener('themeChanged', function() {
+            try {
+                initializeMonthlyTrendsChart();
+            } catch (error) {
+                console.error('Error updating chart on theme change:', error);
+            }
         });
     });
 </script>

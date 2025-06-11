@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'role',
         'business_name',
         'phone_number',
+        'profile_picture',
     ];
 
     /**
@@ -68,5 +70,29 @@ class User extends Authenticatable
     public function financialAnalyses()
     {
         return $this->hasMany(FinancialAnalysis::class);
+    }
+
+    /**
+     * Get the categories for the user.
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    /**
+     * Create default categories for a new user.
+     */
+    public function createDefaultCategories()
+    {
+        $defaultCategories = Category::getDefaultCategories();
+        foreach ($defaultCategories as $category) {
+            $this->categories()->create($category);
+        }
+    }
+
+    public function getProfilePictureUrlAttribute()
+    {
+        return $this->profile_picture ? Storage::url($this->profile_picture) : null;
     }
 }

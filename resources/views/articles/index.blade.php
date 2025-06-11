@@ -23,7 +23,7 @@
                 <select class="rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     <option value="">All Categories</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category }}">{{ $category }}</option>
+                        <option value="{{ $category->slug }}" {{ request('category') == $category->slug ? 'selected' : '' }}>{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -52,7 +52,7 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <span class="px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
-                        {{ $article->category }}
+                        {{ $article->category->name ?? 'Uncategorized' }}
                     </span>
                     <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <i class="fas fa-clock mr-1"></i>

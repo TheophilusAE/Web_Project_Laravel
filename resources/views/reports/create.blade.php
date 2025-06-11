@@ -16,7 +16,7 @@
                 <select name="type" id="type" required
                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="">Select Type</option>
-                    <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Income</option>
+                    <option value="income" {{ old('type', 'income') == 'income' ? 'selected' : '' }}>Income</option>
                     <option value="expense" {{ old('type') == 'expense' ? 'selected' : '' }}>Expense</option>
                 </select>
                 @error('type')
@@ -27,16 +27,12 @@
             <!-- Category -->
             <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
-                <select name="category" id="category" required
-                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <select name="category_id" id="category" required
+                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    data-old-category="{{ old('category_id') }}">
                     <option value="">Select Category</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category }}" {{ old('category') == $category ? 'selected' : '' }}>
-                            {{ ucfirst($category) }}
-                        </option>
-                    @endforeach
                 </select>
-                @error('category')
+                @error('category_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
@@ -94,4 +90,69 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const transactionTypeSelect = document.getElementById('type');
+        const categorySelect = document.getElementById('category');
+        const oldCategoryId = categorySelect.dataset.oldCategory;
+
+        console.log('DOM Content Loaded. Initializing category dropdown logic.'); // Debugging: DOM loaded
+        console.log('Initial transactionTypeSelect.value:', transactionTypeSelect.value); // Debugging: initial value
+
+        async function updateCategoriesDropdown() {
+            const selectedType = transactionTypeSelect.value;
+            categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear existing options
+
+            console.log(`Attempting to fetch categories for type: ${selectedType}`); // Debugging: attempting fetch
+
+            if (selectedType) {
+                try {
+                    const response = await fetch(`/categories/type/${selectedType}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const categories = await response.json();
+
+                    console.log('Categories fetched successfully:', categories); // Debugging: fetched categories
+
+                    if (categories.length === 0) {
+                        console.log('No categories found for this type in the database.');
+                    }
+
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        if (oldCategoryId && String(category.id) === oldCategoryId) {
+                            option.selected = true;
+                        }
+                        categorySelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error fetching categories:', error);
+                    // Optionally, display an error message to the user
+                }
+            } else {
+                console.log('Selected transaction type is empty. Not fetching categories.'); // Debugging: empty type
+            }
+        }
+
+        // Initial call on page load
+        updateCategoriesDropdown();
+
+        // Update when transaction type changes
+        transactionTypeSelect.addEventListener('change', () => {
+            console.log('Transaction type changed. New value:', transactionTypeSelect.value); // Debugging: type changed
+            // Clear oldCategoryId to prevent incorrect re-selection on type change
+            categorySelect.dataset.oldCategory = ''; 
+            updateCategoriesDropdown();
+        });
+
+        // Listen for window focus to refresh categories if user returns from category management
+        window.addEventListener('focus', updateCategoriesDropdown);
+    });
+</script>
+@endpush
 @endsection 

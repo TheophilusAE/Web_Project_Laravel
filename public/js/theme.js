@@ -113,6 +113,11 @@ function toggleTheme() {
     updateChartColors();
 }
 
+// Make functions globally accessible
+window.getCurrentTheme = getCurrentTheme;
+window.toggleTheme = toggleTheme;
+window.updateChartColors = updateChartColors;
+
 // Function to apply theme-dependent styles
 function applyThemeDependentStyles() {
     updateChartColors();

@@ -25,7 +25,7 @@ class AnalysisController extends Controller
             }
             
             // Get transactions for analysis
-            $query = Transaction::where('user_id', $user->id);
+            $query = Transaction::where('transactions.user_id', $user->id);
             
             if ($analysisType === 'monthly') {
                 $startDate = Carbon::now()->startOfMonth();
@@ -42,10 +42,12 @@ class AnalysisController extends Controller
             
 
             // Format category data for chart
-            $categoryData = collect($metrics['category_distribution'])->map(function ($data, $category) {
+            $categoryData = collect($metrics['category_distribution'])->map(function ($data, $categoryId) use ($user) {
+                $category = $user->categories()->find($categoryId);
                 return [
-                    'category' => $category,
-                    'amount' => $data['income'] - $data['expense']
+                    'category_name' => $category ? $category->name : 'Unknown',
+                    'color' => $category ? $category->color : '#cccccc',
+                    'total' => $data['total']
                 ];
             })->values()->toArray();
 
@@ -74,11 +76,10 @@ class AnalysisController extends Controller
         $netIncome = $totalIncome - $totalExpenses;
 
         // Calculate category-wise distribution
-        $categoryDistribution = $transactions->groupBy('category')
-            ->map(function ($items) {
+        $categoryDistribution = $transactions->groupBy('category_id')
+            ->map(function ($items, $categoryId) {
                 return [
-                    'income' => $items->where('type', 'income')->sum('amount'),
-                    'expense' => $items->where('type', 'expense')->sum('amount')
+                    'total' => $items->sum('amount')
                 ];
             });
 
@@ -101,7 +102,7 @@ class AnalysisController extends Controller
             $previousMonthEnd = Carbon::now()->subYear()->endOfYear();
         }
 
-        $previousTransactions = Transaction::where('user_id', $user->id)
+        $previousTransactions = Transaction::where('transactions.user_id', $user->id)
                                 ->whereBetween('transaction_date', [$previousMonth, $previousMonthEnd])
                                 ->get();
         $previousTotalIncome = $previousTransactions->where('type', 'income')->sum('amount');

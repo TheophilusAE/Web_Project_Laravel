@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,6 +89,17 @@
             box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.2), 0 10px 10px -5px rgba(99, 102, 241, 0.1);
         }
     </style>
+    <script>
+        // Set theme immediately to prevent FOUC
+        (function() {
+            const html = document.documentElement;
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+        })();
+    </script>
 </head>
 <body class="h-full bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
     <div id="app" class="h-full flex">
@@ -162,10 +173,6 @@
             <div class="flex items-center justify-between">
                 <button type="button" class="text-white hover:text-indigo-200 focus:outline-none" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars h-6 w-6"></i>
-                </button>
-                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-indigo-600 dark:bg-gray-700 hover:bg-indigo-500 dark:hover:bg-gray-600 transition-colors">
-                    <i class="fas fa-sun text-yellow-500 dark:hidden"></i>
-                    <i class="fas fa-moon text-blue-300 hidden dark:block"></i>
                 </button>
             </div>
         </div>
@@ -250,10 +257,6 @@
                             <h1 class="text-xl font-semibold text-gray-800 dark:text-white">@yield('header', 'Dashboard')</h1>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                                <i class="fas fa-sun text-yellow-500 dark:hidden"></i>
-                                <i class="fas fa-moon text-blue-300 hidden dark:block"></i>
-                            </button>
                             <div class="flex items-center space-x-4">
                                 <a href="{{ route('settings.index') }}" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
                                     <i class="fas fa-cog mr-2"></i> Settings
@@ -281,27 +284,54 @@
             offset: 100
         });
 
-        // Dark mode toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded. Initializing theme and event listeners.');
+            const html = document.documentElement;
 
-        function toggleTheme() {
-            html.classList.toggle('dark');
-            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
-        }
+            // Set initial height for mobile browsers
+            function setFullHeight() {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            setFullHeight();
+            window.addEventListener('resize', setFullHeight);
+            window.addEventListener('orientationchange', setFullHeight);
 
-        // Check for saved theme preference
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-        applyThemeDependentStyles(); // Call after initial theme set
+            // Ensure theme styles are applied to charts on page load and theme changes
+            // Use window.onload to ensure Chart.js is fully loaded
+            window.addEventListener('load', () => {
+                console.log('Window loaded. Updating chart colors.');
+                if (typeof window.updateChartColors === 'function') {
+                    window.updateChartColors();
+                } else {
+                    console.log('window.updateChartColors is not defined.');
+                }
+            });
 
-        // Toggle theme
-        themeToggle.addEventListener('click', () => {
-            toggleTheme();
-            applyThemeDependentStyles(); // Call after theme toggle
+            // Observe changes to the 'class' attribute of the html element for theme changes
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class' && mutation.target === html) {
+                        console.log('HTML class changed. Triggering chart color update.');
+                        if (typeof window.updateChartColors === 'function') {
+                            window.updateChartColors();
+                        } else {
+                            console.log('window.updateChartColors is not defined on mutation.');
+                        }
+                    }
+                });
+            });
+            observer.observe(html, { attributes: true });
+
+            // Initial chart color update for dynamically loaded charts (if any)
+            document.querySelectorAll('canvas[id$="Chart"]').forEach(canvas => {
+                if (Chart.getChart(canvas)) {
+                    console.log('Found existing chart on DOMContentLoad. Updating colors.');
+                    if (typeof window.updateChartColors === 'function') {
+                        window.updateChartColors();
+                    }
+                }
+            });
         });
 
         // Mobile menu toggle function
@@ -309,19 +339,6 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         }
-
-        // Ensure full height on mobile browsers
-        function setFullHeight() {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-
-        // Set initial height
-        setFullHeight();
-
-        // Update height on resize and orientation change
-        window.addEventListener('resize', setFullHeight);
-        window.addEventListener('orientationchange', setFullHeight);
     </script>
 </body>
 </html>

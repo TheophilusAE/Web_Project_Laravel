@@ -16,9 +16,10 @@ class DashboardController extends Controller
         
         // Get current month's transactions
         $currentMonth = Carbon::now()->startOfMonth();
-        $transactions = Transaction::where('user_id', $user->id)
-            ->whereMonth('transaction_date', $currentMonth->month)
-            ->whereYear('transaction_date', $currentMonth->year)
+        $transactions = Transaction::withoutGlobalScope('byUser')
+            ->where('transactions.user_id', $user->id)
+            ->whereMonth('transactions.transaction_date', $currentMonth->month)
+            ->whereYear('transactions.transaction_date', $currentMonth->year)
             ->get();
 
         // Calculate monthly summary
@@ -39,9 +40,10 @@ class DashboardController extends Controller
         $monthlyTrends = [];
         for ($i = 5; $i >= 0; --$i) {
             $month = Carbon::now()->subMonths($i)->startOfMonth();
-            $monthlyTransactions = Transaction::where('user_id', $user->id)
-                ->whereMonth('transaction_date', $month->month)
-                ->whereYear('transaction_date', $month->year)
+            $monthlyTransactions = Transaction::withoutGlobalScope('byUser')
+                ->where('transactions.user_id', $user->id)
+                ->whereMonth('transactions.transaction_date', $month->month)
+                ->whereYear('transactions.transaction_date', $month->year)
                 ->get();
             $monthlyTrends[$month->format('M Y')] = [
                 'income' => $monthlyTransactions->where('type', 'income')->sum('amount'),
@@ -51,27 +53,35 @@ class DashboardController extends Controller
         }
 
         // Compute category distribution (for example, an array of category summaries (sum of amounts) for the current month)
-        $categoryDistribution = Transaction::where('user_id', $user->id)
-            ->whereMonth('transaction_date', $currentMonth->month)
-            ->whereYear('transaction_date', $currentMonth->year)
-            ->select('category', DB::raw('SUM(amount) as total'))
-            ->groupBy('category')
+        $categoryDistribution = Transaction::withoutGlobalScope('byUser')
+            ->where('transactions.user_id', $user->id)
+            ->whereMonth('transactions.transaction_date', $currentMonth->month)
+            ->whereYear('transactions.transaction_date', $currentMonth->year)
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->selectRaw('categories.name as category_name, categories.color as category_color, SUM(transactions.amount) as total')
+            ->groupBy('transactions.category_id', 'categories.name', 'categories.color')
             ->get()
-            ->pluck('total', 'category')
+            ->mapWithKeys(function ($item) {
+                return [$item->category_name => $item->total];
+            })
             ->toArray();
 
         // Get recent transactions
-        $recentTransactions = Transaction::where('user_id', $user->id)
+        $recentTransactions = Transaction::withoutGlobalScope('byUser')
+            ->where('transactions.user_id', $user->id)
+            ->with('category')
             ->orderBy('transaction_date', 'desc')
             ->take(5)
             ->get();
 
         // Get category-wise summary
-        $categorySummary = Transaction::where('user_id', $user->id)
-            ->whereMonth('transaction_date', $currentMonth->month)
-            ->whereYear('transaction_date', $currentMonth->year)
-            ->select('category', 'type', DB::raw('SUM(amount) as total'))
-            ->groupBy('category', 'type')
+        $categorySummary = Transaction::withoutGlobalScope('byUser')
+            ->where('transactions.user_id', $user->id)
+            ->whereMonth('transactions.transaction_date', $currentMonth->month)
+            ->whereYear('transactions.transaction_date', $currentMonth->year)
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->selectRaw('categories.name as category_name, categories.color as category_color, transactions.type, SUM(transactions.amount) as total')
+            ->groupBy('transactions.category_id', 'categories.name', 'categories.color', 'transactions.type')
             ->get();
 
         // Get latest financial analysis

@@ -201,20 +201,27 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                            {{ ucfirst($transaction->category) }}
+                            @if($transaction->category)
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full" style="background-color: {{ $transaction->category->color }}"></span>
+                                    <span>{{ $transaction->category->name }}</span>
+                                </div>
+                            @else
+                                -
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                            {{ $transaction->description }}
+                            {{ $transaction->description ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm {{ $transaction->type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium {{ $transaction->type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
                             Rp {{ number_format($transaction->amount, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <form action="{{ route('reports.destroy', $transaction) }}" method="POST" class="inline">
+                            <form action="{{ route('reports.destroy', $transaction->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this transaction?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" onclick="return confirm('Are you sure you want to delete this transaction?')">
-                                    <i class="fas fa-trash"></i>
+                                <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 ml-4">
+                                    Delete
                                 </button>
                             </form>
                         </td>
@@ -232,360 +239,252 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Global variables to store chart instances
-    let categoryStackedChart = null;
-    let expenseDistributionChart = null;
-    let incomeDistributionChart = null;
-    let monthlyTrendsChart = null;
-    let savingsRateChart = null;
-    let chartsInitialized = false;
+    document.addEventListener('DOMContentLoaded', function () {
+        // Chart.js instances holder
+        let categoryStackedChart, expenseDistributionChart, incomeDistributionChart, categoryComparisonChart, monthlyTrendsChart, savingsRateChart;
 
-    function destroyAllCharts() {
-        const charts = [
-            categoryStackedChart,
-            expenseDistributionChart,
-            incomeDistributionChart,
-            monthlyTrendsChart,
-            savingsRateChart
-        ];
-        
-        charts.forEach(chart => {
-            if (chart) {
-                chart.destroy();
-            }
-        });
-        
-        categoryStackedChart = null;
-        expenseDistributionChart = null;
-        incomeDistributionChart = null;
-        monthlyTrendsChart = null;
-        savingsRateChart = null;
-        chartsInitialized = false;
-    }
-
-    function initializeCharts() {
-        // Prevent multiple initializations
-        if (chartsInitialized) {
-            return;
-        }
-
-        // Destroy any existing charts first
-        destroyAllCharts();
-
-        const isDark = document.documentElement.classList.contains('dark');
-        const themeColors = {
-            background: isDark ? '#1f2937' : '#ffffff',
-            text: isDark ? '#e5e7eb' : '#374151',
-            border: isDark ? '#374151' : '#e5e7eb',
-            grid: isDark ? '#374151' : '#e5e7eb',
-            accent: isDark ? '#60a5fa' : '#3b82f6',
-            accent2: isDark ? '#34d399' : '#10b981',
-            accent3: isDark ? '#f87171' : '#ef4444',
-            accent4: isDark ? '#fbbf24' : '#f59e0b',
-            accent5: isDark ? '#a78bfa' : '#8b5cf6',
-            accent6: isDark ? '#f472b6' : '#ec4899'
+        const chartColors = {
+            income: 'rgba(75, 192, 192, 0.6)',
+            expense: 'rgba(255, 99, 132, 0.6)',
+            net: 'rgba(54, 162, 235, 0.6)',
         };
 
-        // Common chart options
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: themeColors.text,
-                        boxWidth: 12,
-                        padding: 15
+        function getDynamicColors(count) {
+            const colors = [];
+            const baseHue = 0; // Starting hue for color generation
+            for (let i = 0; i < count; i++) {
+                const hue = (baseHue + (i * 137)) % 360; // Use golden angle approximation for even distribution
+                colors.push(`hsl(${hue}, 70%, 60%)`);
+            }
+            return colors;
+        }
+
+        function initializeCharts() {
+            // Destroy existing chart instances if they exist
+            if (categoryStackedChart) categoryStackedChart.destroy();
+            if (expenseDistributionChart) expenseDistributionChart.destroy();
+            if (incomeDistributionChart) incomeDistributionChart.destroy();
+            if (categoryComparisonChart) categoryComparisonChart.destroy();
+            if (monthlyTrendsChart) monthlyTrendsChart.destroy();
+            if (savingsRateChart) savingsRateChart.destroy();
+
+            // Income & Expenses by Category Stacked Bar Chart
+            const categoryStackedCtx = document.getElementById('categoryStackedChart').getContext('2d');
+            categoryStackedChart = new Chart(categoryStackedCtx, {
+                type: 'bar',
+                data: {
+                    labels: @json($categoryComparison->pluck('category_name')),
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: @json($categoryComparison->pluck('income')),
+                            backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                        },
+                        {
+                            label: 'Expenses',
+                            data: @json($categoryComparison->pluck('expense')),
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: true }
                     }
                 }
-            }
-        };
+            });
 
-        try {
-            // Category Stacked Chart
-            const categoryStackedCtx = document.getElementById('categoryStackedChart')?.getContext('2d');
-            if (categoryStackedCtx) {
-                categoryStackedChart = new Chart(categoryStackedCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: {!! json_encode($categoryComparison->pluck('category')) !!},
-                        datasets: [
-                            {
-                                label: 'Income',
-                                data: {!! json_encode($categoryComparison->pluck('income')) !!},
-                                backgroundColor: themeColors.accent,
-                                borderColor: themeColors.accent,
-                                borderWidth: 1
-                            },
-                            {
-                                label: 'Expenses',
-                                data: {!! json_encode($categoryComparison->pluck('expense')) !!},
-                                backgroundColor: themeColors.accent3,
-                                borderColor: themeColors.accent3,
-                                borderWidth: 1
-                            }
-                        ]
-                    },
-                    options: {
-                        ...commonOptions,
-                        plugins: {
-                            ...commonOptions.plugins,
-                            title: {
-                                display: true,
-                                text: 'Income & Expenses by Category',
-                                color: themeColors.text
-                            }
+            // Expense Distribution Chart (Pie/Doughnut)
+            const expenseCtx = document.getElementById('expenseDistributionChart').getContext('2d');
+            const expenseLabels = @json($expenseCategories->pluck('category_name'));
+            const expenseAmounts = @json($expenseCategories->pluck('amount'));
+            const expenseColors = @json($expenseCategories->pluck('category_color'));
+            expenseDistributionChart = new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: expenseLabels,
+                    datasets: [{
+                        data: expenseAmounts,
+                        backgroundColor: expenseColors.length > 0 ? expenseColors : getDynamicColors(expenseLabels.length),
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
                         },
-                        scales: {
-                            x: {
-                                stacked: true,
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: themeColors.text,
-                                    maxRotation: 45,
-                                    minRotation: 45
-                                }
-                            },
-                            y: {
-                                stacked: true,
-                                beginAtZero: true,
-                                grid: {
-                                    color: themeColors.grid
-                                },
-                                ticks: {
-                                    color: themeColors.text
-                                }
-                            }
+                        title: {
+                            display: true,
+                            text: 'Expense Distribution'
                         }
                     }
-                });
-            }
+                }
+            });
 
-            // Expense Distribution Chart
-            const expenseDistributionCtx = document.getElementById('expenseDistributionChart')?.getContext('2d');
-            if (expenseDistributionCtx) {
-                expenseDistributionChart = new Chart(expenseDistributionCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: {!! json_encode($expenseCategories->pluck('category')) !!},
-                        datasets: [{
-                            data: {!! json_encode($expenseCategories->pluck('amount')) !!},
-                            backgroundColor: [
-                                themeColors.accent,
-                                themeColors.accent2,
-                                themeColors.accent3,
-                                themeColors.accent4,
-                                themeColors.accent5,
-                                themeColors.accent6
-                            ],
-                            borderColor: themeColors.background,
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        ...commonOptions,
-                        plugins: {
-                            ...commonOptions.plugins,
-                            title: {
-                                display: true,
-                                text: 'Expense Distribution',
-                                color: themeColors.text
-                            }
+            // Income Distribution Chart (Pie/Doughnut)
+            const incomeCtx = document.getElementById('incomeDistributionChart').getContext('2d');
+            const incomeLabels = @json($incomeCategories->pluck('category_name'));
+            const incomeAmounts = @json($incomeCategories->pluck('amount'));
+            const incomeColors = @json($incomeCategories->pluck('category_color'));
+            incomeDistributionChart = new Chart(incomeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: incomeLabels,
+                    datasets: [{
+                        data: incomeAmounts,
+                        backgroundColor: incomeColors.length > 0 ? incomeColors : getDynamicColors(incomeLabels.length),
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
                         },
-                        cutout: '60%'
+                        title: {
+                            display: true,
+                            text: 'Income Distribution'
+                        }
                     }
-                });
-            }
+                }
+            });
 
-            // Income Distribution Chart
-            const incomeDistributionCtx = document.getElementById('incomeDistributionChart')?.getContext('2d');
-            if (incomeDistributionCtx) {
-                incomeDistributionChart = new Chart(incomeDistributionCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: {!! json_encode($incomeCategories->pluck('category')) !!},
-                        datasets: [{
-                            data: {!! json_encode($incomeCategories->pluck('amount')) !!},
-                            backgroundColor: [
-                                themeColors.accent,
-                                themeColors.accent2,
-                                themeColors.accent3,
-                                themeColors.accent4,
-                                themeColors.accent5,
-                                themeColors.accent6
-                            ],
-                            borderColor: themeColors.background,
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        ...commonOptions,
-                        plugins: {
-                            ...commonOptions.plugins,
-                            title: {
-                                display: true,
-                                text: 'Income Distribution',
-                                color: themeColors.text
-                            }
+            // Category Comparison Chart
+            const categoryComparisonCtx = document.getElementById('categoryComparisonChart').getContext('2d');
+            categoryComparisonChart = new Chart(categoryComparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: @json($categoryComparison->pluck('category_name')),
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: @json($categoryComparison->pluck('income')),
+                            backgroundColor: 'rgba(75, 192, 192, 0.8)',
                         },
-                        cutout: '60%'
+                        {
+                            label: 'Expense',
+                            data: @json($categoryComparison->pluck('expense')),
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: false },
+                        y: { stacked: false, beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { display: true }
                     }
-                });
-            }
+                }
+            });
 
             // Monthly Trends Chart
-            const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart')?.getContext('2d');
-            if (monthlyTrendsCtx) {
-                monthlyTrendsChart = new Chart(monthlyTrendsCtx, {
-                    type: 'line',
-                    data: {
-                        labels: {!! json_encode($monthlyTrends->pluck('month')) !!},
-                        datasets: [
-                            {
-                                label: 'Income',
-                                data: {!! json_encode($monthlyTrends->pluck('income')) !!},
-                                borderColor: themeColors.accent,
-                                backgroundColor: themeColors.accent + '20',
-                                fill: true,
-                                tension: 0.4
-                            },
-                            {
-                                label: 'Expenses',
-                                data: {!! json_encode($monthlyTrends->pluck('expense')) !!},
-                                borderColor: themeColors.accent3,
-                                backgroundColor: themeColors.accent3 + '20',
-                                fill: true,
-                                tension: 0.4
-                            },
-                            {
-                                label: 'Net',
-                                data: {!! json_encode($monthlyTrends->pluck('net')) !!},
-                                borderColor: themeColors.accent2,
-                                backgroundColor: themeColors.accent2 + '20',
-                                fill: true,
-                                tension: 0.4
-                            }
-                        ]
-                    },
-                    options: {
-                        ...commonOptions,
-                        plugins: {
-                            ...commonOptions.plugins,
-                            title: {
-                                display: true,
-                                text: 'Monthly Trends',
-                                color: themeColors.text
-                            }
+            const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
+            monthlyTrendsChart = new Chart(monthlyTrendsCtx, {
+                type: 'line',
+                data: {
+                    labels: @json($monthlyTrends->pluck('month')),
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: @json($monthlyTrends->pluck('income')),
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            fill: false,
+                            tension: 0.1
                         },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: themeColors.text
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: themeColors.grid
-                                },
-                                ticks: {
-                                    color: themeColors.text
-                                }
-                            }
+                        {
+                            label: 'Expense',
+                            data: @json($monthlyTrends->pluck('expense')),
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Net',
+                            data: @json($monthlyTrends->pluck('net')),
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            fill: false,
+                            tension: 0.1
                         }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { color: 'rgba(200, 200, 200, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { display: true }
                     }
-                });
-            }
+                }
+            });
 
             // Savings Rate Chart
-            const savingsRateCtx = document.getElementById('savingsRateChart')?.getContext('2d');
-            if (savingsRateCtx) {
-                savingsRateChart = new Chart(savingsRateCtx, {
-                    type: 'line',
-                    data: {
-                        labels: {!! json_encode($savingsRateTrend->pluck('month')) !!},
-                        datasets: [{
-                            label: 'Savings Rate (%)',
-                            data: {!! json_encode($savingsRateTrend->pluck('rate')) !!},
-                            borderColor: themeColors.accent2,
-                            backgroundColor: themeColors.accent2 + '20',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        ...commonOptions,
-                        plugins: {
-                            ...commonOptions.plugins,
-                            title: {
-                                display: true,
-                                text: 'Monthly Savings Rate',
-                                color: themeColors.text
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: themeColors.text
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: themeColors.grid
-                                },
-                                ticks: {
-                                    color: themeColors.text,
-                                    callback: function(value) {
-                                        return value + '%';
-                                    }
-                                }
-                            }
+            const savingsRateCtx = document.getElementById('savingsRateChart').getContext('2d');
+            savingsRateChart = new Chart(savingsRateCtx, {
+                type: 'line',
+                data: {
+                    labels: @json($savingsRateTrend->pluck('month')),
+                    datasets: [{
+                        label: 'Savings Rate (%)',
+                        data: @json($savingsRateTrend->pluck('rate')),
+                        borderColor: 'rgb(153, 102, 255)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: function(value) { return value + '%'; } },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
                         }
+                    },
+                    plugins: {
+                        legend: { display: true }
                     }
-                });
-            }
-
-            chartsInitialized = true;
-        } catch (error) {
-            console.error('Error initializing charts:', error);
-            destroyAllCharts();
+                }
+            });
         }
-    }
 
-    // Initialize charts when the DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeCharts);
-    } else {
         initializeCharts();
-    }
 
-    // Update charts when theme changes
-    document.addEventListener('themeChanged', function() {
-        destroyAllCharts();
-        initializeCharts();
-    });
-
-    // Cleanup charts when page is unloaded
-    window.addEventListener('beforeunload', destroyAllCharts);
-
-    // Update charts when page visibility changes
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') {
-            destroyAllCharts();
-            initializeCharts();
-        }
+        // Re-initialize charts on window focus (if user returns from category management)
+        window.addEventListener('focus', initializeCharts);
     });
 </script>
 @endpush 

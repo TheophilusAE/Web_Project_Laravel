@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Article extends Model
 {
     protected $fillable = [
         'title',
         'content',
-        'category',
+        'category_id',
         'image_url',
         'author',
         'is_published',
@@ -32,5 +33,10 @@ class Article extends Model
                 'slug' => \Str::slug($tag),
             ];
         });
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 } 

@@ -271,16 +271,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoryAnalysisChart = new Chart(categoryAnalysisCtx, {
         type: 'doughnut',
         data: {
-            labels: {!! json_encode($categoryAnalysis->pluck('category')) !!},
+            labels: {!! json_encode(collect($categoryData)->pluck('category_name')) !!},
             datasets: [{
-                data: {!! json_encode($categoryAnalysis->pluck('amount')) !!},
-                backgroundColor: [
-                    themeColors.chart.category1,
-                    themeColors.chart.category2,
-                    themeColors.chart.category3,
-                    themeColors.chart.category4,
-                    themeColors.chart.category5
-                ],
+                data: {!! json_encode(collect($categoryData)->pluck('total')) !!},
+                backgroundColor: {!! json_encode(collect($categoryData)->pluck('color')) !!},
                 borderWidth: 2,
                 borderColor: themeColors.background.primary
             }]
